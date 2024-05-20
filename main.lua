@@ -6,6 +6,8 @@ require("mobdebug").start()
 --this is to make prints appear right away in zerobrane
 io.stdout:setvbuf("no")
 
+require "mathUtil"
+
 ----EXAMPLES: INSTANTIARING A CLASS
 
 local ShipCls = require("Ship")
@@ -14,6 +16,12 @@ local ship = nil
 local StarsCls = require("Stars")
 local stars = nil
 
+local BulletsCls = require("Bullets")
+local bullets = nil
+
+local EnemiesCls = require("Enemies")
+local enemies = nil
+
 local AssetsManager = require("AssetsManager")
 local Model = require("Model")
 
@@ -21,20 +29,37 @@ local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
 local UP_KEY = "up"
 local DOWN_KEY = "down"
-
+local SPACE_KEY = "space"
 
 function love.load()
     print("love.load")
     AssetsManager.init()
     Model.init()
+    bullets = BulletsCls.new( Model.bulletParams )
     stars = StarsCls.new( Model.starsParams)
-    ship = ShipCls.new( Model.shipParams )
+    local shipParams = Model.shipParams
+    shipParams["bullets"] = bullets
+    ship = ShipCls.new( shipParams )
+    enemies = EnemiesCls.new( Model.enemiesParams)
 end
 
 function love.update(dt)
    -- print("update")
     ship:update(dt)
     stars:update(dt)
+    bullets:update(dt)
+    enemies:update(dt)
+    
+    
+    for i = 1, #bullets.bullets do
+        local bullet = bullets.bullets[i]
+        for j = 1, #enemies.enemies do
+            local enemy = enemies.enemies[j]
+            if isColliding(enemy.x, enemy.y, enemies.radius ,bullet.x, bullet.y, bullets.radius)  then
+                print("Enemy hit")
+            end
+        end    
+    end
 end
 
 
@@ -42,6 +67,8 @@ function love.draw()
     --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
     stars:draw()
     ship:draw()
+    bullets:draw()
+    enemies:draw()
     
     --love.graphics.print("You Win!", 180, 350)
 end
@@ -60,6 +87,10 @@ function love.keypressed(key)
     elseif key == DOWN_KEY then
         Model.movement.down = true
     end
+    
+    if key == SPACE_KEY then
+        Model.movement.space = true
+    end
 
 end
 
@@ -74,6 +105,10 @@ function love.keyreleased(key)
         Model.movement.up = false
     elseif key == DOWN_KEY then
         Model.movement.down = false
+    end
+    
+    if key == SPACE_KEY then
+        Model.movement.space = false
     end
 end
 

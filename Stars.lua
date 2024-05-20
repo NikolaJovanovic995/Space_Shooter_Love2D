@@ -22,7 +22,16 @@ end
 
 
 function Stars:update(dt)
-    
+    for i=1, self.numStars do
+        local star = self.starsArr[i]
+        local y = star.y + self.speed * dt
+        
+        if y > Model.stage.stageHeight then
+          y = 0
+          star.x = math.random() * Model.stage.stageWidth
+        end
+        star.y = y
+    end
 end
 
 function Stars:draw()

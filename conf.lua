@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.title = "Tetris!"                
+    t.title = "Space shooter!"                
     t.version = "11.3"                    
     t.console = false                     
     t.window.width =  420                

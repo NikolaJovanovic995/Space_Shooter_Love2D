@@ -1,4 +1,4 @@
-local Model = require("Model")
+local Model = require("Scripts/Models/Model")
 local Stars = classes.class()
 
 function Stars:init(params)
@@ -44,11 +44,6 @@ function Stars:draw()
         love.graphics.circle("fill", star.x, star.y, radius) -- Draw white circle with 100 segments.
     end
     
-    
 end
-
-
-
-
 
 return Stars

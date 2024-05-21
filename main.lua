@@ -6,24 +6,26 @@ require("mobdebug").start()
 --this is to make prints appear right away in zerobrane
 io.stdout:setvbuf("no")
 
-require "mathUtil"
+local mathUtil = require ("Scripts/Utils/MathUtils")
 
 ----EXAMPLES: INSTANTIARING A CLASS
 
-local ShipCls = require("Ship")
+local ShipCls = require("Scripts/Classes/Ship")
 local ship = nil
 
-local StarsCls = require("Stars")
+local StarsCls = require("Scripts/Classes/Stars")
 local stars = nil
 
-local BulletsCls = require("Bullets")
+local BulletsCls = require("Scripts/Classes/Bullets")
 local bullets = nil
 
-local EnemiesCls = require("Enemies")
-local enemies = nil
 
-local AssetsManager = require("AssetsManager")
-local Model = require("Model")
+local ExplosionsCls = require("Scripts/Classes/Explosions")
+local explosions = nil
+
+local LevelManager = require("Scripts/Managers/LevelManager")
+local AssetsManager = require("Scripts/Managers/AssetsManager")
+local Model = require("Scripts/Models/Model")
 
 local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
@@ -31,46 +33,53 @@ local UP_KEY = "up"
 local DOWN_KEY = "down"
 local SPACE_KEY = "space"
 
+local isGameOver = false
+
 function love.load()
     print("love.load")
     AssetsManager.init()
     Model.init()
-    bullets = BulletsCls.new( Model.bulletParams )
+    LevelManager.init(Model.levelParams)
+
+    bullets = BulletsCls.new( Model.bulletsParams )
     stars = StarsCls.new( Model.starsParams)
     local shipParams = Model.shipParams
     shipParams["bullets"] = bullets
     ship = ShipCls.new( shipParams )
-    enemies = EnemiesCls.new( Model.enemiesParams)
+    --enemies = EnemiesCls.new( Model.enemiesParams)
+    explosions = ExplosionsCls.new( Model.explosionsParams )
 end
 
 function love.update(dt)
-   -- print("update")
-    ship:update(dt)
-    stars:update(dt)
-    bullets:update(dt)
-    enemies:update(dt)
-    
-    
-    for i = 1, #bullets.bullets do
-        local bullet = bullets.bullets[i]
-        for j = 1, #enemies.enemies do
-            local enemy = enemies.enemies[j]
-            if isColliding(enemy.x, enemy.y, enemies.radius ,bullet.x, bullet.y, bullets.radius)  then
-                print("Enemy hit")
-            end
-        end    
+  
+    if isGameOver == false then
+        LevelManager.update(dt)
+        ship:update(dt)
+        stars:update(dt)
+        bullets:update(dt)
+        --enemies:update(dt)
+        explosions:update(dt)
+        
+        --checkCollisions()
     end
 end
 
 
 function love.draw()
-    --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
-    stars:draw()
-    ship:draw()
-    bullets:draw()
-    enemies:draw()
-    
-    --love.graphics.print("You Win!", 180, 350)
+  
+    if isGameOver == false then
+        LevelManager.draw()
+        --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
+        stars:draw()
+        ship:draw()
+        bullets:draw()
+        --enemies:draw()
+        explosions:draw(dt)
+        
+        --love.graphics.print("You Win!", 180, 350)
+        
+        love.graphics.print("HP: " .. ship.health , 180, 30)
+    end
 end
 
 
@@ -112,8 +121,33 @@ function love.keyreleased(key)
     end
 end
 
---
---
-
+function checkCollisions()
+  
+    for i, enemy in ipairs(enemies.spawnedEnemies) do
+      
+        if isColliding(enemy.x, enemy.y, enemies.offsetX, enemies.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
+          
+            print("Player got hit")
+            isGameOver = ship:makeDamage(enemy.impactDamage)
+            enemies:makeDamage(i, enemy.health)
+            explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+            break
+        else
+            for j, bullet in ipairs(bullets.spawnedBullets) do
+              
+                if isColliding(enemy.x, enemy.y, enemies.offsetX, enemies.offsetY, bullet.x, bullet.y, bullets.offsetX, bullets.offsetY)  then
+                    print("Enemy hit")
+                    local destroyed = enemies:makeDamage(i, bullet.damage)
+                    bullets:explode(j)
+                    if destroyed then
+                        explosions:spawnExplosion((enemy.x + enemies.w / 2 + bullet.x) / 2, (enemy.y + enemies.h / 2 + bullet.y) / 2)
+                    end
+                    return
+                end
+            end
+        end
+    end
+  
+end
 
 

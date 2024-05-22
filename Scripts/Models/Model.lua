@@ -36,12 +36,12 @@ Model.levelParams = {
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_1" , count = 10 } } 
+                        enemies = { { enemyType = "enemy_2" , count = 10 } } 
                     }, -- wave 2
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_1" , count = 15 } } 
+                        enemies = { { enemyType = "enemy_3" , count = 15 } } 
                     } -- wave 3
                 }
     },
@@ -96,18 +96,29 @@ Model.levelParams = {
 Model.enemies = {
     enemy_1 = {
                   enemyType = "enemy_1",
+                  movementType = "straight",
                   assetName = "enemy_1",
                   speed = 250,
-                  health = 5,
+                  health = 10,
                   impactDamage = 10,
                   pointsValue = 1
               },
     enemy_2 = {
                   enemyType = "enemy_2",
+                  movementType = "straight",
+                  assetName = "enemy_2",
+                  speed = 400,
+                  health = 5,
+                  impactDamage = 50,
+                  pointsValue = 2
+              },
+    enemy_3 = {
+                  enemyType = "enemy_3",
+                  movementType = "sin",
                   assetName = "enemy_2",
                   speed = 250,
                   health = 10,
-                  impactDamage = 20,
+                  impactDamage = 10,
                   pointsValue = 2
               }
 }

@@ -79,6 +79,7 @@ function love.draw()
         --love.graphics.print("You Win!", 180, 350)
         
         love.graphics.print("HP: " .. ship.health , 180, 30)
+        love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
     end
 end
 

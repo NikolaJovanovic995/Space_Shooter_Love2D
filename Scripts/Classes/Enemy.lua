@@ -1,5 +1,6 @@
 local classes = require("Scripts/Classes/classes")
 local Model = require("Scripts/Models/Model")
+local EnemyMoveManager = require("Scripts/Managers/EnemyMoveManager")
 local Enemy = classes.class()
 
 local stageWidth = nil
@@ -11,6 +12,7 @@ function Enemy:init(params)
     
     stageWidth = Model.stage.stageWidth
     stageHeight = Model.stage.stageHeight
+    self.movement = EnemyMoveManager.getMovement(params.movementType)
     
     self.asset = params.asset
     self.enemyType = params.enemyType
@@ -27,8 +29,13 @@ function Enemy:init(params)
     
 end
 
+function Enemy:reset()
+    self.x = math.random( self.offsetX, stageWidth - self.offsetX)
+    self.y = - self.h
+end
+
 function Enemy:update(dt)  
-    self.y = self.y + self.speed * dt
+    self.x, self.y = self.movement:update(dt, self.speed, self.x, self.y)
 end
 
 function Enemy:draw()

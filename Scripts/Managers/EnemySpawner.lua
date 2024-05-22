@@ -17,7 +17,7 @@ EnemySpawner.spawn = function(enemyType)
     else
         print("Get enemy from pool of type: " .. enemyType)
         local enemy = table.remove(enemiesPool[enemyType])
-        enemy:init(enemiesConfig[enemyType])
+        enemy:reset()
         return enemy
     end
 end

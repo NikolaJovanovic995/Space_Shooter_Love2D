@@ -1,7 +1,10 @@
 local EnemySpawner = require("Scripts/Managers/EnemySpawner")
+local Model = require("Scripts/Models/Model")
 
 local LevelManager = {}
 
+local stageWidth = nil
+local stageHeight = nil
 local levelData = nil
 local currentLevel = nil
 local currentWave = nil
@@ -18,6 +21,8 @@ math.randomseed(os.clock())
 LevelManager.init = function(levelParams, enemyParams)
     print("Level manager init!")
     EnemySpawner.init(enemyParams)
+    stageWidth = Model.stage.stageWidth
+    stageHeight = Model.stage.stageHeight
     levelData = levelParams
     currentLevel = levelData[1]
     currentWave = currentLevel.waves[1]
@@ -74,6 +79,14 @@ LevelManager.update = function(dt)
     
     
     for i, enemy in ipairs(spawnedEnemies) do
+        if enemy.y - enemy.offsetY > stageHeight then
+            local removeEnemy = table.remove(spawnedEnemies, i)
+            EnemySpawner.despawn(removeEnemy)
+            break
+        end
+    end
+    
+    for i, enemy in pairs(spawnedEnemies) do
         enemy:update(dt)
     end
     

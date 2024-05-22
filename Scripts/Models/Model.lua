@@ -26,39 +26,90 @@ Model.bulletsParams = {
 Model.levelParams = {
     {
         levelName = "Level 1",
-        minSpawnTime = 2,
-        maxSpawnTime = 4,
-        enemies = {  { enemyType = "enemy_1" , count = 1 }  }
+        waveSpawnTime = 3,
+        waves = { 
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 5 } } 
+                    }, -- wave 1
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 10 } } 
+                    }, -- wave 2
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 15 } } 
+                    } -- wave 3
+                }
     },
     {
         levelName = "Level 2",
         minSpawnTime = 2,
         maxSpawnTime = 3,
-        enemies = {  { enemyType = "enemy_1" , count = 10 } , { enemyType = "enemy_2" , count = 5 } }
+        waveSpawnTime = 3,
+        waves = { 
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    }, -- wave 1
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    }, -- wave 2
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    } -- wave 3
+                }
     },
     {
         levelName = "Level 3",
         minSpawnTime = 1,
         maxSpawnTime = 3,
-        enemies = {  { enemyType = "enemy_1" , count = 10 } , { enemyType = "enemy_2" , count = 10 }}
+        waveSpawnTime = 3,
+        waves = { 
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    }, -- wave 1
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    }, -- wave 2
+                    {   
+                        minSpawnTime = 2,
+                        maxSpawnTime = 4,
+                        enemies = { { enemyType = "enemy_1" , count = 1 } } 
+                    } -- wave 3
+                }
     }
 }
 
 Model.enemies = {
-    {
-        assetName = "enemy_1",
-        speed = 250,
-        health = 5,
-        impactDamage = 10,
-        pointsValue = 1
-    },
-    {
-        assetName = "enemy_2",
-        speed = 250,
-        health = 10,
-        impactDamage = 20,
-        pointsValue = 2
-    }
+    enemy_1 = {
+                  enemyType = "enemy_1",
+                  assetName = "enemy_1",
+                  speed = 250,
+                  health = 5,
+                  impactDamage = 10,
+                  pointsValue = 1
+              },
+    enemy_2 = {
+                  enemyType = "enemy_2",
+                  assetName = "enemy_2",
+                  speed = 250,
+                  health = 10,
+                  impactDamage = 20,
+                  pointsValue = 2
+              }
 }
 
 Model.starsParams = {
@@ -83,9 +134,8 @@ Model.init = function()
     Model.shipParams.asset = AssetsManager.sprites[Model.shipParams.assetName]
     Model.bulletsParams.asset = AssetsManager.sprites[Model.bulletsParams.assetName]
     Model.explosionsParams.asset = AssetsManager.sprites[Model.explosionsParams.assetName]
-    --Model.enemiesParams.asset = AssetsManager.sprites[Model.enemiesParams.assetName]
     
-    for index, enemy in ipairs(Model.enemies) do
+    for index, enemy in pairs(Model.enemies) do
         enemy.asset = AssetsManager.sprites[enemy.assetName]
     end
     

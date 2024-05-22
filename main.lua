@@ -39,7 +39,7 @@ function love.load()
     print("love.load")
     AssetsManager.init()
     Model.init()
-    LevelManager.init(Model.levelParams)
+    LevelManager.init(Model.levelParams, Model.enemies)
 
     bullets = BulletsCls.new( Model.bulletsParams )
     stars = StarsCls.new( Model.starsParams)
@@ -60,7 +60,7 @@ function love.update(dt)
         --enemies:update(dt)
         explosions:update(dt)
         
-        --checkCollisions()
+        checkCollisions()
     end
 end
 
@@ -123,24 +123,29 @@ end
 
 function checkCollisions()
   
-    for i, enemy in ipairs(enemies.spawnedEnemies) do
+    for i, enemy in ipairs(LevelManager.SpawnedEnemies()) do
       
-        if isColliding(enemy.x, enemy.y, enemies.offsetX, enemies.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
+        if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
           
             print("Player got hit")
             isGameOver = ship:makeDamage(enemy.impactDamage)
-            enemies:makeDamage(i, enemy.health)
-            explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+            local isEnemyDead = enemy:makeDamage(i, enemy.health)
+            if isEnemyDead then
+                LevelManager.removeEnemy(i)
+                explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+            end
             break
+        
         else
             for j, bullet in ipairs(bullets.spawnedBullets) do
               
-                if isColliding(enemy.x, enemy.y, enemies.offsetX, enemies.offsetY, bullet.x, bullet.y, bullets.offsetX, bullets.offsetY)  then
+                if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, bullet.x, bullet.y, bullets.offsetX, bullets.offsetY)  then
                     print("Enemy hit")
-                    local destroyed = enemies:makeDamage(i, bullet.damage)
+                    local destroyed = enemy:makeDamage(i, bullet.damage)
                     bullets:explode(j)
                     if destroyed then
-                        explosions:spawnExplosion((enemy.x + enemies.w / 2 + bullet.x) / 2, (enemy.y + enemies.h / 2 + bullet.y) / 2)
+                        LevelManager.removeEnemy(i)
+                        explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)
                     end
                     return
                 end

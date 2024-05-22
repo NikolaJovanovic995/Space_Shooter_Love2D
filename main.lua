@@ -16,10 +16,6 @@ local ship = nil
 local StarsCls = require("Scripts/Classes/Stars")
 local stars = nil
 
-local BulletsCls = require("Scripts/Classes/Bullets")
-local bullets = nil
-
-
 local ExplosionsCls = require("Scripts/Classes/Explosions")
 local explosions = nil
 
@@ -40,24 +36,18 @@ function love.load()
     AssetsManager.init()
     Model.init()
     LevelManager.init(Model.levelParams, Model.enemies)
-
-    bullets = BulletsCls.new( Model.bulletsParams )
     stars = StarsCls.new( Model.starsParams)
-    local shipParams = Model.shipParams
-    shipParams["bullets"] = bullets
-    ship = ShipCls.new( shipParams )
-    --enemies = EnemiesCls.new( Model.enemiesParams)
+    ship = ShipCls.new( Model.shipParams )
     explosions = ExplosionsCls.new( Model.explosionsParams )
 end
 
 function love.update(dt)
   
     if isGameOver == false then
-        LevelManager.update(dt)
-        ship:update(dt)
+      
         stars:update(dt)
-        bullets:update(dt)
-        --enemies:update(dt)
+        ship:update(dt)
+        LevelManager.update(dt)
         explosions:update(dt)
         
         checkCollisions()
@@ -68,18 +58,16 @@ end
 function love.draw()
   
     if isGameOver == false then
-        LevelManager.draw()
-        --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
+        
+        love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
         stars:draw()
         ship:draw()
-        bullets:draw()
-        --enemies:draw()
+        LevelManager.draw()
         explosions:draw(dt)
         
         --love.graphics.print("You Win!", 180, 350)
-        
         love.graphics.print("HP: " .. ship.health , 180, 30)
-        love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
+        --love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
     end
 end
 
@@ -138,9 +126,9 @@ function checkCollisions()
             break
         
         else
-            for j, bullet in ipairs(bullets.spawnedBullets) do
+            for j, bullet in ipairs(ship.spawnedBullets) do
               
-                if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, bullet.x, bullet.y, bullets.offsetX, bullets.offsetY)  then
+                if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, bullet.x, bullet.y, bullet.offsetX, bullet.offsetY)  then
                     print("Enemy hit")
                     local destroyed = enemy:makeDamage(i, bullet.damage)
                     bullets:explode(j)

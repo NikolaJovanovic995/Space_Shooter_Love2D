@@ -1,27 +1,26 @@
 local classes = require("Scripts/Classes/classes")
 local Model = require("Scripts/Models/Model")
-local Bullets = require("Scripts/Classes/Bullets")
+local ShipShootingManager = require("Scripts/Managers/ShipShootingManager")
 local MathUtil = require("Scripts/Utils/MathUtils")
+local ScreenObject = require("Scripts/Classes/ScreenObject")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 
-local Ship = classes.class()
+local Ship = classes.class(ScreenObject)
 
 function Ship:init(params)
     print("Ship init!")
+    
+    self.super:init(params)
+    
     self.health = params.health
     self.speed = params.speed
-    self.asset = params.asset
-    self.w = self.asset:getWidth()
-    self.h = self.asset:getHeight()
     self.x = Model.stage.stageWidth / 2
     self.y = Model.stage.stageHeight * 3 / 4
-    self.offsetX = self.w / 2
-    self.offsetY = self.h / 2
     self.rightBoundry = Model.stage.stageWidth - self.offsetX
     self.bottomBoundry = Model.stage.stageHeight - self.offsetY
     
-    self.bullets = params.bullets
-    
+    self.shooting = ShipShootingManager.getShooting("single")
+    self.spawnedBullets = {}
 end
 
 function Ship:update(dt)
@@ -54,14 +53,11 @@ function Ship:update(dt)
     
     
     if shoot then
-        self.bullets:fireBullet(self.x, self.y - self.offsetY)
+        self.shooting:shoot()
+        --self.bullets:fireBullet(self.x, self.y - self.offsetY)
         AssetsManager.sounds.playerShoot:play()
     end
 
-end
-
-function Ship:draw()
-    love.graphics.draw(self.asset, self.x - self.offsetX, self.y - self.offsetY)
 end
 
 function Ship:makeDamage(damage)

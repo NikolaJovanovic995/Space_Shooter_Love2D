@@ -1,5 +1,5 @@
-local MoveStraightCls = require("Scripts/Classes/EnemyMoveStraight")
-local MoveSinCls = require("Scripts/Classes/EnemyMoveSin")
+local MoveStraightCls = require("Scripts/Classes/EnemyMove/EnemyMoveStraight")
+local MoveSinCls = require("Scripts/Classes/EnemyMove/EnemyMoveSin")
 
 local EnemyMoveManager = {}
 

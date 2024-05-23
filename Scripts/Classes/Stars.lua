@@ -1,4 +1,5 @@
-local Model = require("Scripts/Models/Model")
+local ScreenSize = require("Scripts/Models/ScreenSize")
+
 local Stars = classes.class()
 
 function Stars:init(params)
@@ -6,12 +7,10 @@ function Stars:init(params)
     self.speed = params.speed
     self.radius = params.radius
     local numStars = params.numStars
-    local stageWidth = Model.stage.stageWidth
-    local stageHeight = Model.stage.stageHeight
     local starsArr = {}
     for i=1, numStars do
-        local x = math.random() * stageWidth
-        local y = math.random() * stageHeight
+        local x = math.random() * ScreenSize.screenWidth
+        local y = math.random() * ScreenSize.screenHeight
         local star = {x = x,y = y}
         table.insert(starsArr, star)
     end
@@ -26,9 +25,9 @@ function Stars:update(dt)
         local star = self.starsArr[i]
         local y = star.y + self.speed * dt
         
-        if y > Model.stage.stageHeight then
+        if y > ScreenSize.screenHeight then
           y = 0
-          star.x = math.random() * Model.stage.stageWidth
+          star.x = math.random() * ScreenSize.screenWidth
         end
         star.y = y
     end

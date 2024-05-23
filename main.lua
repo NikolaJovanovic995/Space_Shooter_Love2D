@@ -6,6 +6,11 @@ require("mobdebug").start()
 --this is to make prints appear right away in zerobrane
 io.stdout:setvbuf("no")
 
+local StateMashineCls = require("Scripts/Classes/States/StateMachine")
+local TitleScreenStateCls = require("Scripts/Classes/States/TitleScreenState")
+local CountdownStateCls = require("Scripts/Classes/States/CountdownState")
+local PlayStateCls = require("Scripts/Classes/States/PlayState")
+local ScoreStateCls = require("Scripts/Classes/States/ScoreState")
 local mathUtil = require ("Scripts/Utils/MathUtils")
 
 ----EXAMPLES: INSTANTIARING A CLASS
@@ -22,6 +27,7 @@ local explosions = nil
 local LevelManager = require("Scripts/Managers/LevelManager")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 local Model = require("Scripts/Models/Model")
+local UserInput = require("Scripts/Models/UserInput")
 
 local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
@@ -29,7 +35,7 @@ local UP_KEY = "up"
 local DOWN_KEY = "down"
 local SPACE_KEY = "space"
 
-local isGameOver = false
+local isGameOver = true
 
 function love.load()
     print("love.load")
@@ -39,10 +45,20 @@ function love.load()
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
     explosions = ExplosionsCls.new( Model.explosionsParams )
+    
+    gStateMachine = StateMashineCls.new(
+      {
+        ['title'] = function() return TitleScreenStateCls.new() end,
+        ['countdown'] = function() return CountdownStateCls.new() end,
+        ['play'] = function() return PlayStateCls.new() end,
+        ['score'] = function() return ScoreStateCls.new() end
+      }
+    )
+    gStateMachine:change('title')
 end
 
 function love.update(dt)
-  
+    gStateMachine:update(dt)
     if isGameOver == false then
       
         stars:update(dt)
@@ -57,6 +73,7 @@ end
 
 function love.draw()
   
+    gStateMachine:render()
     if isGameOver == false then
         
         love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
@@ -75,38 +92,38 @@ end
 function love.keypressed(key)
     print(key)
     if key == LEFT_KEY then
-        Model.movement.left = true
+        UserInput.left = true
     elseif key == RIGHT_KEY then
-        Model.movement.right = true
+        UserInput.right = true
     end
     
     if key == UP_KEY then
         Model.movement.up = true
     elseif key == DOWN_KEY then
-        Model.movement.down = true
+        UserInput.down = true
     end
     
     if key == SPACE_KEY then
-        Model.movement.space = true
+        UserInput.space = true
     end
 
 end
 
 function love.keyreleased(key)
     if key == LEFT_KEY then
-        Model.movement.left = false
+        UserInput.left = false
     elseif key == RIGHT_KEY then
         Model.movement.right = false
     end
     
     if key == UP_KEY then
-        Model.movement.up = false
+        UserInput.up = false
     elseif key == DOWN_KEY then
-        Model.movement.down = false
+        UserInput.down = false
     end
     
     if key == SPACE_KEY then
-        Model.movement.space = false
+        UserInput.space = false
     end
 end
 

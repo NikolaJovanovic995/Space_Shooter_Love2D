@@ -1,4 +1,6 @@
 local classes = require("Scripts/Classes/classes")
+local ScreenSize = require("Scripts/Models/ScreenSize")
+
 local ScreenObject = classes.class()
 
 function ScreenObject:init(params)

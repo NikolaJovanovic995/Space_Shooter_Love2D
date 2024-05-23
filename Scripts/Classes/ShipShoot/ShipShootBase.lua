@@ -38,6 +38,7 @@ end
 function ShipShootBase:isReadyToShoot()
     if self.fireTime > self.fireRate then
         self.fireTime = 0
+        --AssetsManager.sounds.playerShoot:play()
         return true
     end
     return false

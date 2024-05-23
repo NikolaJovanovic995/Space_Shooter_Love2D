@@ -1,14 +1,6 @@
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 
-local Model = {
-    movement = {
-        up = false,
-        down = false,
-        left = false,
-        right = false,
-        space = false
-    }
-}
+local Model = {}
 
 Model.shipParams = {
     assetName = "ship",
@@ -158,12 +150,6 @@ Model.explosionsParams = {
 }
 
 Model.init = function()
-    Model.stage = {
-        stageHeight = love.graphics.getHeight(),
-        stageWidth = love.graphics.getWidth()
-    }
-    
-    
     --init assets dynamically
     Model.shipParams.asset = AssetsManager.sprites[Model.shipParams.assetName]
     Model.bulletsParams.asset = AssetsManager.sprites[Model.bulletsParams.assetName]

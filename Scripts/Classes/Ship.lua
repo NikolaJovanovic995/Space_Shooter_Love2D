@@ -1,5 +1,6 @@
 local classes = require("Scripts/Classes/classes")
-local Model = require("Scripts/Models/Model")
+local ScreenSize = require("Scripts/Models/ScreenSize")
+local UserInput = require("Scripts/Models/UserInput")
 local ShipShootingManager = require("Scripts/Managers/ShipShootingManager")
 local MathUtil = require("Scripts/Utils/MathUtils")
 local ScreenObject = require("Scripts/Classes/ScreenObject")
@@ -15,10 +16,10 @@ function Ship:init(params)
     
     self.health = params.health
     self.speed = params.speed
-    self.x = Model.stage.stageWidth / 2
-    self.y = Model.stage.stageHeight * 3 / 4
-    self.rightBoundry = Model.stage.stageWidth - self.offsetX
-    self.bottomBoundry = Model.stage.stageHeight - self.offsetY
+    self.x = ScreenSize.screenWidth / 2
+    self.y = ScreenSize.screenHeight * 3 / 4
+    self.rightBoundry = ScreenSize.screenWidth - self.offsetX
+    self.bottomBoundry = ScreenSize.screenHeight - self.offsetY
     
     ShipShootingManager.init()
     self.shooting = ShipShootingManager.getShooting("tripleAngle")
@@ -26,26 +27,20 @@ end
 
 function Ship:update(dt)
 
-    local left = Model.movement.left
-    local right = Model.movement.right
-    local up = Model.movement.up
-    local down = Model.movement.down
-    local shoot = Model.movement.space
-
     local x = 0
     local y = 0
 
-    if left then
+    if UserInput.left then
         x = x + -1
     end
-    if right then
+    if UserInput.right then
         x = x + 1
     end
 
-    if up then
+    if UserInput.up then
         y = y + -1
     end
-    if down then
+    if UserInput.down then
         y = y + 1
     end
 
@@ -53,10 +48,9 @@ function Ship:update(dt)
     self.y = MathUtil.clamp(self.y + (y * self.speed * dt), self.offsetY, self.bottomBoundry)
     
     
-    if shoot then
+    if UserInput.space then
         self.shooting:shoot(bulletType, self.x, self.y - self.offsetY)
     end
-    --AssetsManager.sounds.playerShoot:play()
     
     self.shooting:update(dt)
 end

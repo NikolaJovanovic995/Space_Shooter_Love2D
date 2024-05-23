@@ -8,6 +8,7 @@ function ShipShootBase:init(params)
     self.fireTime = params.fireRate
     self.speed = params.speed
     self.damage = params.damage
+    
     self.spawnedBullets = {}     
 end
 
@@ -18,13 +19,13 @@ function ShipShootBase.update(self, dt)
     for i, bullet in ipairs(self.spawnedBullets) do
         bullet:update(dt)
     end
-    --[[
+    
     for i, bullet in ipairs(self.spawnedBullets) do
-        if bullet.y + self.offsetY < 0 then
+        if bullet.y + bullet.offsetY < 0 then
             table.remove(self.spawnedBullets, i)
             break
         end
-    end]]
+    end
 end
 
 function ShipShootBase:draw()

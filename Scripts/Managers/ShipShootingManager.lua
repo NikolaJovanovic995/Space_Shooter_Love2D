@@ -26,9 +26,9 @@ end
 
 ShipShootingManager.shootingTypes = {
   
-      single = ShipShootSingleCls.new(Model.shootingParams["single"])
-      --triple = ShipShootTripleCls.new(Model.shootingParams["tripple"]),
-      --tripleAngle = ShipShootTripleAngleCls.new(Model.shootingParams["trippleAngle"])
+      single = ShipShootSingleCls.new(Model.shootingParams["single"]),
+      triple = ShipShootTripleCls.new(Model.shootingParams["triple"]),
+      tripleAngle = ShipShootTripleAngleCls.new(Model.shootingParams["tripleAngle"])
 }
 
 return ShipShootingManager

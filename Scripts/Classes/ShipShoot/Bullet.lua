@@ -23,13 +23,12 @@ function Bullet:init(params)
     
 end
 
-function Bullet:setPositionAndVector(x , y, dx, dy)
-    
+function Bullet:setPositionAndVector(x , y, dx, dy, r)
     self.x = x
     self.y = y
     self.dx = dx
     self.dy = dy
-    
+    self.rotation = r or 0
 end
 
 function Bullet:reset()

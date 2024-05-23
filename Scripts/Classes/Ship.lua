@@ -21,7 +21,7 @@ function Ship:init(params)
     self.bottomBoundry = Model.stage.stageHeight - self.offsetY
     
     ShipShootingManager.init()
-    self.shooting = ShipShootingManager.getShooting("single")
+    self.shooting = ShipShootingManager.getShooting("tripleAngle")
 end
 
 function Ship:update(dt)

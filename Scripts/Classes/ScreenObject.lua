@@ -11,10 +11,11 @@ function ScreenObject:init(params)
     self.offsetY = h / 2
     self.x = 0
     self.y = 0
+    self.rotation = 0
 end
 
 function ScreenObject:draw()
-    love.graphics.draw(self.asset, self.x - self.offsetX, self.y - self.offsetY)
+    love.graphics.draw(self.asset, self.x, self.y, self.rotation, 1, 1, self.offsetX, self.offsetY)
 end
 
 return ScreenObject

@@ -16,26 +16,29 @@ function Bullet:init(params)
     stageHeight = Model.stage.stageHeight
     
     self.bulletType = params.bulletType
-    self.x = 0
-    self.y = 0
+    
     self.speed = params.speed
     self.fireRate = params.fireRate
     self.damage = params.damage
     
 end
 
+function Bullet:setPositionAndVector(x , y, dx, dy)
+    
+    self.x = x
+    self.y = y
+    self.dx = dx
+    self.dy = dy
+    
+end
+
 function Bullet:reset()
-    
-    
 end
 
 function Bullet:update(dt)  
-
+    local dist = dt * self.speed
+    self.x = self.x + dist * self.dx
+    self.y = self.y + dist * self.dy
 end
-
-function Bullet:someMethod(dt)  
-  
-end
-
 
 return Bullet

@@ -50,7 +50,7 @@ function love.update(dt)
         LevelManager.update(dt)
         explosions:update(dt)
         
-        --checkCollisions()
+        checkCollisions()
     end
 end
 
@@ -67,7 +67,7 @@ function love.draw()
         
         --love.graphics.print("You Win!", 180, 350)
         love.graphics.print("HP: " .. ship.health , 180, 30)
-        --love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
+        love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
     end
 end
 
@@ -126,12 +126,12 @@ function checkCollisions()
             break
         
         else
-            for j, bullet in ipairs(ship.spawnedBullets) do
+            for j, bullet in ipairs(ship.shooting.spawnedBullets) do
               
                 if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, bullet.x, bullet.y, bullet.offsetX, bullet.offsetY)  then
                     print("Enemy hit")
                     local destroyed = enemy:makeDamage(i, bullet.damage)
-                    bullets:explode(j)
+                    ship.shooting:bulletHit(j)
                     if destroyed then
                         LevelManager.removeEnemy(i)
                         explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)

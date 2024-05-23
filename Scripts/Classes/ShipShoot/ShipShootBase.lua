@@ -42,8 +42,8 @@ function ShipShootBase:isReadyToShoot()
     return false
 end
 
-function ShipShootBase:explode(index)
-    table.remove(self.spawnedBullets, i)
+function ShipShootBase:bulletHit(index)
+    table.remove(self.spawnedBullets, index)
 end
 
 return ShipShootBase

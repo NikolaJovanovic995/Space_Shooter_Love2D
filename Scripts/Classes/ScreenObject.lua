@@ -9,6 +9,8 @@ function ScreenObject:init(params)
     self.h = h 
     self.offsetX = w / 2
     self.offsetY = h / 2
+    self.x = 0
+    self.y = 0
 end
 
 function ScreenObject:draw()

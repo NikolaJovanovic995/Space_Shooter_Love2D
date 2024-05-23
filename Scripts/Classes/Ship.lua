@@ -6,6 +6,7 @@ local ScreenObject = require("Scripts/Classes/ScreenObject")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 
 local Ship = classes.class(ScreenObject)
+local bulletType = "bullet"
 
 function Ship:init(params)
     print("Ship init!")
@@ -19,6 +20,7 @@ function Ship:init(params)
     self.rightBoundry = Model.stage.stageWidth - self.offsetX
     self.bottomBoundry = Model.stage.stageHeight - self.offsetY
     
+    ShipShootingManager.init()
     self.shooting = ShipShootingManager.getShooting("single")
 end
 
@@ -52,9 +54,16 @@ function Ship:update(dt)
     
     
     if shoot then
-        self.shooting:shoot( self.x, self.y - self.offsetY)
+        self.shooting:shoot(bulletType, self.x, self.y - self.offsetY)
     end
     --AssetsManager.sounds.playerShoot:play()
+    
+    self.shooting:update(dt)
+end
+
+function Ship:draw()
+    self.super.draw(self)
+    self.shooting:draw()
 end
 
 function Ship:makeDamage(damage)

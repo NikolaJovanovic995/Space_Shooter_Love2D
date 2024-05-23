@@ -29,7 +29,7 @@ Model.shootingParams = {
                 fireRate = 0.5,
                 damage = 5
               },
-    triple =  {
+    tripleAngle = {
                 assetName = "bullet",
                 speed = 500,
                 fireRate = 0.5,
@@ -38,10 +38,12 @@ Model.shootingParams = {
 }
 
 Model.bulletsParams = {
-    assetName = "bullet",
-    speed = 500,
-    fireRate = 0.5,
-    damage = 5
+    bullet =    {
+                  assetName = "bullet",
+                  speed = 500,
+                  fireRate = 0.5,
+                  damage = 5
+                }
 }
 
 Model.levelParams = {
@@ -171,8 +173,8 @@ Model.init = function()
         enemy.asset = AssetsManager.sprites[enemy.assetName]
     end
     
-    for index, shooting in pairs(Model.shootingParams) do
-        shooting.asset = AssetsManager.sprites[shooting.assetName]
+    for index, bullet in pairs(Model.bulletsParams) do
+        bullet.asset = AssetsManager.sprites[bullet.assetName]
     end
     
     --define enemies here

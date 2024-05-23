@@ -1,10 +1,15 @@
 local Model = require("Scripts/Models/Model")
+local BulletSpawner = require("Scripts/Managers/BulletSpawner")
 
 local ShipShootSingleCls = require("Scripts/Classes/ShipShoot/ShipShootSingle")
 local ShipShootTripleCls = require("Scripts/Classes/ShipShoot/ShipShootTriple")
 local ShipShootTripleAngleCls = require("Scripts/Classes/ShipShoot/ShipShootTripleAngle")
 
 local ShipShootingManager = {}
+
+ShipShootingManager.init = function()
+    BulletSpawner.init(Model.bulletsParams)
+end
 
 ShipShootingManager.getShooting = function(shootType) 
   
@@ -14,6 +19,7 @@ ShipShootingManager.getShooting = function(shootType)
         error("Can not resolve ship shoot type: " .. shootType)
     end
     
+    shooting.bulletSpawner = BulletSpawner
     return shooting
 end
 

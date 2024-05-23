@@ -15,14 +15,12 @@ function Bullet:init(params)
     stageWidth = Model.stage.stageWidth
     stageHeight = Model.stage.stageHeight
     
-    self.movement = EnemyMoveManager.getMovement(params.movementType)
-    self.enemyType = params.enemyType
-    self.x = math.random( self.offsetX, stageWidth - self.offsetX)
-    self.y = - self.h
+    self.bulletType = params.bulletType
+    self.x = 0
+    self.y = 0
     self.speed = params.speed
-    self.health = params.health
-    self.impactDamage = params.impactDamage
-    self.pointsValue = params.pointsValue
+    self.fireRate = params.fireRate
+    self.damage = params.damage
     
 end
 
@@ -32,7 +30,11 @@ function Bullet:reset()
 end
 
 function Bullet:update(dt)  
-    --x,y
+
+end
+
+function Bullet:someMethod(dt)  
+  
 end
 
 

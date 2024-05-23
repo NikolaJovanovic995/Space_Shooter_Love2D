@@ -50,7 +50,7 @@ function love.update(dt)
         LevelManager.update(dt)
         explosions:update(dt)
         
-        checkCollisions()
+        --checkCollisions()
     end
 end
 

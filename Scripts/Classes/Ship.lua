@@ -20,7 +20,6 @@ function Ship:init(params)
     self.bottomBoundry = Model.stage.stageHeight - self.offsetY
     
     self.shooting = ShipShootingManager.getShooting("single")
-    self.spawnedBullets = {}
 end
 
 function Ship:update(dt)
@@ -53,11 +52,9 @@ function Ship:update(dt)
     
     
     if shoot then
-        self.shooting:shoot()
-        --self.bullets:fireBullet(self.x, self.y - self.offsetY)
-        AssetsManager.sounds.playerShoot:play()
+        self.shooting:shoot( self.x, self.y - self.offsetY)
     end
-
+    --AssetsManager.sounds.playerShoot:play()
 end
 
 function Ship:makeDamage(damage)

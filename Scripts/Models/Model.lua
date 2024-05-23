@@ -16,6 +16,27 @@ Model.shipParams = {
     health = 100
 }
 
+Model.shootingParams = {
+    single =  {
+                assetName = "bullet",
+                speed = 500,
+                fireRate = 0.5,
+                damage = 5
+              },
+    triple =  {
+                assetName = "bullet",
+                speed = 500,
+                fireRate = 0.5,
+                damage = 5
+              },
+    triple =  {
+                assetName = "bullet",
+                speed = 500,
+                fireRate = 0.5,
+                damage = 5
+              }
+}
+
 Model.bulletsParams = {
     assetName = "bullet",
     speed = 500,
@@ -148,6 +169,10 @@ Model.init = function()
     
     for index, enemy in pairs(Model.enemies) do
         enemy.asset = AssetsManager.sprites[enemy.assetName]
+    end
+    
+    for index, shooting in pairs(Model.shootingParams) do
+        shooting.asset = AssetsManager.sprites[shooting.assetName]
     end
     
     --define enemies here

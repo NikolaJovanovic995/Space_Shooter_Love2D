@@ -10,8 +10,9 @@ local stars = nil
 local ExplosionsCls = require("Scripts/Classes/Explosions")
 local explosions = nil
 
+
+local SoundManager = require("Scripts/Managers/SoundManager")
 local LevelManager = require("Scripts/Managers/LevelManager")
-local AssetsManager = require("Scripts/Managers/AssetsManager")
 local Model = require("Scripts/Models/Model")
 local LevelModel = require("Scripts/Models/LevelModel")
 local UserInput = require("Scripts/Models/UserInput")
@@ -69,6 +70,8 @@ function PlayState:checkCollisions()
         if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
           
             print("Player got hit")
+            
+            SoundManager.sounds.hit:play()
             local isGameOver = ship:makeDamage(enemy.impactDamage)
             
             if isGameOver then
@@ -81,8 +84,10 @@ function PlayState:checkCollisions()
             
             local isEnemyDead = enemy:makeDamage(i, enemy.health)
             if isEnemyDead then
+              
                 LevelManager.destroyEnemy(i)
                 explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+                SoundManager.sounds.explosion:play()
             end
             break
         
@@ -97,6 +102,9 @@ function PlayState:checkCollisions()
                         LevelManager.destroyEnemy(i)
                         explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)
                         ship.score = ship.score + enemy.pointsValue
+                        SoundManager.sounds.explosion:play()
+                    else
+                        SoundManager.sounds.hit:play()
                     end
                     return
                 end

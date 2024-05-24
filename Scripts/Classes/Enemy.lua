@@ -18,6 +18,7 @@ function Enemy:init(params)
     self.y = - self.h
     self.speed = params.speed
     self.health = params.health
+    self.startingHealth = params.health
     self.impactDamage = params.impactDamage
     self.pointsValue = params.pointsValue
     
@@ -26,7 +27,7 @@ end
 function Enemy:reset(params)
     self.x = math.random( self.offsetX, ScreenSize.screenWidth - self.offsetX)
     self.y = - self.h
-    self.health = params.health
+    self.health = self.startingHealth
 end
 
 function Enemy:update(dt)  

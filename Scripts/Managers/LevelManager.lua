@@ -1,9 +1,11 @@
-local EnemySpawner = require("Scripts/Managers/EnemySpawner")
+local ObjectPoolCls = require("Scripts/Classes/ObjectPool")
+local EnemyCls = require("Scripts/Classes/Enemy")
 local LevelModel = require("Scripts/Models/LevelModel")
 local ScreenSize = require("Scripts/Models/ScreenSize")
 
 local LevelManager = {}
 
+local enemyObjectPool = nil
 local levelData = nil
 local currentLevel = nil
 local currentWave = nil
@@ -18,7 +20,11 @@ math.randomseed(os.clock())
 
 LevelManager.init = function(levelNumber, levelDataParam, enemyParams)
     print("Level manager init!")
-    EnemySpawner.init(enemyParams)
+    enemyObjectPool = ObjectPoolCls.new(
+      {
+          objectClass = EnemyCls,
+          objectConfigs = enemyParams
+      })
     
     currentLevelIndex = levelNumber
     currentLevel = levelDataParam
@@ -44,7 +50,7 @@ LevelManager.update = function(dt)
             end
             enemy.count = enemy.count -1
             print("Level: " .. currentLevelIndex .. "  Wave: " .. currentWaveIndex .. "  spawn enemy type: " .. enemy.enemyType .. "  remaining: " .. enemy.count)
-            local enemySpawned = EnemySpawner.spawn(enemy.enemyType)
+            local enemySpawned = enemyObjectPool:spawn(enemy.enemyType)
             table.insert(spawnedEnemies, enemySpawned)
             
             if enemy.count == 0 then
@@ -72,7 +78,7 @@ LevelManager.update = function(dt)
     for i, enemy in ipairs(spawnedEnemies) do
         if enemy.y - enemy.offsetY > ScreenSize.screenHeight then
             local removeEnemy = table.remove(spawnedEnemies, i)
-            EnemySpawner.despawn(removeEnemy)
+            enemyObjectPool:despawn(removeEnemy, removeEnemy.enemyType)
             break
         end
     end
@@ -90,7 +96,7 @@ end
 
 LevelManager.destroyEnemy = function(index)
     local enemy = table.remove(spawnedEnemies, index)
-    EnemySpawner.despawn(enemy)
+    enemyObjectPool:despawn(enemy, enemy.enemyType)
 end
 
 LevelManager.SpawnedEnemies = function()

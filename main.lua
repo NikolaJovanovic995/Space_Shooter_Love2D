@@ -9,6 +9,7 @@ io.stdout:setvbuf("no")
 ----EXAMPLES: INSTANTIARING A CLASS
 
 local AssetsManager = require("Scripts/Managers/AssetsManager")
+local SoundManager = require("Scripts/Managers/SoundManager")
 local Model = require("Scripts/Models/Model")
 local UserInput = require("Scripts/Models/UserInput")
 
@@ -29,6 +30,7 @@ local ENTER_KEY = "return"
 function love.load()
     print("love.load")
     AssetsManager.init()
+    SoundManager.init()
     Model.init()
     
     PlayState = PlayStateCls.new()

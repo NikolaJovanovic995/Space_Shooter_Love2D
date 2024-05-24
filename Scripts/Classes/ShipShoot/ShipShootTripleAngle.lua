@@ -13,15 +13,15 @@ function ShipShootTripleAngle:shoot(bulletType, x, y)
     if self.super.isReadyToShoot(self) then
       
         local bullet
-        bullet = self.bulletSpawner.spawn(bulletType)
+        bullet = self.bulletObjectPool:spawn(bulletType)
         bullet:setPositionAndVector(x - offset, y, -direction, -direction, -angle)
         table.insert(self.spawnedBullets, bullet)
         
-        bullet = self.bulletSpawner.spawn(bulletType)
+        bullet = self.bulletObjectPool:spawn(bulletType)
         bullet:setPositionAndVector(x, y, 0, -1)
         table.insert(self.spawnedBullets, bullet)
         
-        bullet = self.bulletSpawner.spawn(bulletType)
+        bullet = self.bulletObjectPool:spawn(bulletType)
         bullet:setPositionAndVector(x + offset, y, direction, -direction, angle)
         table.insert(self.spawnedBullets, bullet)
     end

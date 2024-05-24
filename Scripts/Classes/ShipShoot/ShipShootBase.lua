@@ -1,15 +1,16 @@
 local classes = require("Scripts/Classes/classes")
+local SoundManager = require("Scripts/Managers/SoundManager")
 local BulletCls = require("Scripts/Classes/ShipShoot/Bullet")
 local ShipShootBase = classes.class()
 
-function ShipShootBase:init(params, bulletSpawner)
+function ShipShootBase:init(params)
     
     self.fireRate = params.fireRate
     self.fireTime = params.fireRate
     self.speed = params.speed
     self.damage = params.damage
     
-    self.bulletSpawner = bulletSpawner
+    self.bulletObjectPool = {}
     self.spawnedBullets = {}     
 end
 
@@ -23,7 +24,8 @@ function ShipShootBase.update(self, dt)
     
     for i, bullet in ipairs(self.spawnedBullets) do
         if bullet.y + bullet.offsetY < 0 then
-            self.bulletSpawner.despawn(table.remove(self.spawnedBullets, i))
+            local bullet = table.remove(self.spawnedBullets, i)
+            self.bulletObjectPool:despawn(bullet, bullet.bulletType)
             break
         end
     end
@@ -39,14 +41,15 @@ end
 function ShipShootBase:isReadyToShoot()
     if self.fireTime > self.fireRate then
         self.fireTime = 0
-        --AssetsManager.sounds.playerShoot:play()
+        SoundManager.sounds.playerShoot:play()
         return true
     end
     return false
 end
 
 function ShipShootBase:bulletHit(index)
-    self.bulletSpawner.despawn(table.remove(self.spawnedBullets, index))
+    local bullet = table.remove(self.spawnedBullets, i)
+    self.bulletObjectPool:despawn(bullet, bullet.bulletType)
 end
 
 return ShipShootBase

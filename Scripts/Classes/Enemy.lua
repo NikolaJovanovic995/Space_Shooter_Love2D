@@ -1,12 +1,10 @@
 local classes = require("Scripts/Classes/classes")
-local Model = require("Scripts/Models/Model")
+local ScreenSize = require("Scripts/Models/ScreenSize")
 local ScreenObject = require("Scripts/Classes/ScreenObject")
 local EnemyMoveManager = require("Scripts/Managers/EnemyMoveManager")
 
 local Enemy = classes.class(ScreenObject)
 
-local stageWidth = nil
-local stageHeight = nil
 math.randomseed(os.clock())
 
 function Enemy:init(params)
@@ -14,11 +12,9 @@ function Enemy:init(params)
     
     self.super:init(params)
     
-    stageWidth = Model.stage.stageWidth
-    stageHeight = Model.stage.stageHeight
     self.movement = EnemyMoveManager.getMovement(params.movementType)
     self.enemyType = params.enemyType
-    self.x = math.random( self.offsetX, stageWidth - self.offsetX)
+    self.x = math.random( self.offsetX, ScreenSize.screenWidth - self.offsetX)
     self.y = - self.h
     self.speed = params.speed
     self.health = params.health
@@ -28,7 +24,7 @@ function Enemy:init(params)
 end
 
 function Enemy:reset()
-    self.x = math.random( self.offsetX, stageWidth - self.offsetX)
+    self.x = math.random( self.offsetX, ScreenSize.screenWidth - self.offsetX)
     self.y = - self.h
 end
 

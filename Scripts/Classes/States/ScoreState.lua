@@ -1,13 +1,3 @@
---[[
-    ScoreState Class
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
-
-    A simple state used to display the player's score before they
-    transition back into the play state. 
-]]
-
-
 local BaseState = require("Scripts/Classes/States/BaseState")
 
 ScoreState = classes.class(BaseState)

@@ -1,133 +1,107 @@
---[[
-    PlayState Class
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
-
-    The PlayState class is the bulk of the game, where the player actually controls the ship and
-    destroys enemies. When the player HP becomes < 0, we should go to the GameOver state, where
-    we then go back to the main menu.
-]]
-
 local BaseState = require("Scripts/Classes/States/BaseState")
-
 PlayState = classes.class(BaseState)
 
-PIPE_SPEED = 60
-PIPE_WIDTH = 70
-PIPE_HEIGHT = 288
+local ShipCls = require("Scripts/Classes/Ship")
+local ship = nil
 
-BIRD_WIDTH = 38
-BIRD_HEIGHT = 24
+local StarsCls = require("Scripts/Classes/Stars")
+local stars = nil
+
+local ExplosionsCls = require("Scripts/Classes/Explosions")
+local explosions = nil
+
+local LevelManager = require("Scripts/Managers/LevelManager")
+local AssetsManager = require("Scripts/Managers/AssetsManager")
+local Model = require("Scripts/Models/Model")
+local UserInput = require("Scripts/Models/UserInput")
+local mathUtil = require ("Scripts/Utils/MathUtils")
 
 function PlayState:init()
-    self.bird = Bird()
-    self.pipePairs = {}
-    self.timer = 0
-    self.score = 0
-
-    -- initialize our last recorded Y value for a gap placement to base other gaps off of
-    self.lastY = -PIPE_HEIGHT + math.random(80) + 20
+  
+    LevelManager.init(Model.levelParams, Model.enemies)
+    stars = StarsCls.new( Model.starsParams)
+    ship = ShipCls.new( Model.shipParams )
+    explosions = ExplosionsCls.new( Model.explosionsParams )
 end
 
 function PlayState:update(dt)
-    -- update timer for pipe spawning
-    self.timer = self.timer + dt
-
-    -- spawn a new pipe pair every second and a half
-    if self.timer > 2 then
-        -- modify the last Y coordinate we placed so pipe gaps aren't too far apart
-        -- no higher than 10 pixels below the top edge of the screen,
-        -- and no lower than a gap length (90 pixels) from the bottom
-        local y = math.max(-PIPE_HEIGHT + 10, 
-            math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
-        self.lastY = y
-
-        -- add a new pipe pair at the end of the screen at our new Y
-        table.insert(self.pipePairs, PipePair(y))
-
-        -- reset timer
-        self.timer = 0
-    end
-
-    -- for every pair of pipes..
-    for k, pair in pairs(self.pipePairs) do
-        -- score a point if the pipe has gone past the bird to the left all the way
-        -- be sure to ignore it if it's already been scored
-        if not pair.scored then
-            if pair.x + PIPE_WIDTH < self.bird.x then
-                self.score = self.score + 1
-                pair.scored = true
-                sounds['score']:play()
-            end
-        end
-
-        -- update position of pair
-        pair:update(dt)
-    end
-
-    -- we need this second loop, rather than deleting in the previous loop, because
-    -- modifying the table in-place without explicit keys will result in skipping the
-    -- next pipe, since all implicit keys (numerical indices) are automatically shifted
-    -- down after a table removal
-    for k, pair in pairs(self.pipePairs) do
-        if pair.remove then
-            table.remove(self.pipePairs, k)
-        end
-    end
-
-    -- simple collision between bird and all pipes in pairs
-    for k, pair in pairs(self.pipePairs) do
-        for l, pipe in pairs(pair.pipes) do
-            if self.bird:collides(pipe) then
-                sounds['explosion']:play()
-                sounds['hurt']:play()
-
-                gStateMachine:change('score', {
-                    score = self.score
-                })
-            end
-        end
-    end
-
-    -- update bird based on gravity and input
-    self.bird:update(dt)
+    
+    stars:update(dt)
+    ship:update(dt)
+    LevelManager.update(dt)
+    explosions:update(dt)
+    
+    checkCollisions()
+    
 
     -- reset if we get to the ground
+    --[[
     if self.bird.y > VIRTUAL_HEIGHT - 15 then
-        sounds['explosion']:play()
         sounds['hurt']:play()
 
         gStateMachine:change('score', {
             score = self.score
         })
-    end
+    end]]
 end
 
 function PlayState:render()
-    for k, pair in pairs(self.pipePairs) do
-        pair:render()
+    
+    love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
+    stars:draw()
+    ship:draw()
+    LevelManager.draw()
+    explosions:draw(dt)
+    
+    --love.graphics.print("You Win!", 180, 350)
+    love.graphics.print("HP: " .. ship.health , 180, 30)
+    love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
+end
+
+
+
+function checkCollisions()
+  
+    for i, enemy in ipairs(LevelManager.SpawnedEnemies()) do
+      
+        if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
+          
+            print("Player got hit")
+            isGameOver = ship:makeDamage(enemy.impactDamage)
+            local isEnemyDead = enemy:makeDamage(i, enemy.health)
+            if isEnemyDead then
+                LevelManager.removeEnemy(i)
+                explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+            end
+            break
+        
+        else
+            for j, bullet in ipairs(ship.shooting.spawnedBullets) do
+              
+                if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, bullet.x, bullet.y, bullet.offsetX, bullet.offsetY)  then
+                    print("Enemy hit")
+                    local destroyed = enemy:makeDamage(i, bullet.damage)
+                    ship.shooting:bulletHit(j)
+                    if destroyed then
+                        LevelManager.removeEnemy(i)
+                        explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)
+                    end
+                    return
+                end
+            end
+        end
     end
-
-    love.graphics.setFont(flappyFont)
-    love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
-
-    self.bird:render()
+  
 end
 
---[[
-    Called when this state is transitioned to from another state.
-]]
+
 function PlayState:enter()
-    -- if we're coming from death, restart scrolling
-    scrolling = true
+
 end
 
---[[
-    Called when this state changes to another state.
-]]
+
 function PlayState:exit()
-    -- stop scrolling for the death/score screen
-    scrolling = false
+
 end
 
 return PlayState

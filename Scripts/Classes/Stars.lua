@@ -10,14 +10,9 @@ function Stars:init(params)
     self.starsArr = {}
     
     for i=1, params.numStars do
-        local x = math.random() * ScreenSize.screenWidth
-        local y = math.random() * ScreenSize.screenHeight
-        local star = {x = x, y = y}
-        table.insert(self.starsArr, star)
+        table.insert(self.starsArr, { x = math.random() * ScreenSize.screenWidth, y = math.random() * ScreenSize.screenHeight })
     end
-    
 end
-
 
 function Stars:update(dt)
   
@@ -35,11 +30,9 @@ end
 function Stars:draw()
   
     love.graphics.setColor(1, 1, 1)
-    local radius = self.radius
-    local numStars = self.numStars
     
     for i, star in ipairs(self.starsArr) do
-        love.graphics.circle("fill", star.x, star.y, radius) -- Draw white circle with 100 segments.
+        love.graphics.circle("fill", star.x, star.y, self.radius) -- Draw white circle with 100 segments.
     end
 end
 

@@ -1,4 +1,5 @@
 local EnemyCls = require("Scripts/Classes/Enemy")
+local objectUtil = require ("Scripts/Utils/ObjectUtil")
 
 local EnemySpawner = {}
 
@@ -13,11 +14,11 @@ end
 EnemySpawner.spawn = function(enemyType)
     if enemiesPool[enemyType] == nil or #enemiesPool[enemyType] == 0 then
         print("No enemies in pool of type: " .. enemyType)
-        return EnemyCls.new(enemiesConfig[enemyType])
+        return EnemyCls.new(objectUtil.deepCopy(enemiesConfig[enemyType]))
     else
         print("Get enemy from pool of type: " .. enemyType)
         local enemy = table.remove(enemiesPool[enemyType])
-        enemy:reset()
+        enemy:reset(enemiesConfig[enemyType])
         return enemy
     end
 end

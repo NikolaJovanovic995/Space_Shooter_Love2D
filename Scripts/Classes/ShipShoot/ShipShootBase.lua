@@ -2,13 +2,14 @@ local classes = require("Scripts/Classes/classes")
 local BulletCls = require("Scripts/Classes/ShipShoot/Bullet")
 local ShipShootBase = classes.class()
 
-function ShipShootBase:init(params)
+function ShipShootBase:init(params, bulletSpawner)
     
     self.fireRate = params.fireRate
     self.fireTime = params.fireRate
     self.speed = params.speed
     self.damage = params.damage
     
+    self.bulletSpawner = bulletSpawner
     self.spawnedBullets = {}     
 end
 
@@ -22,7 +23,7 @@ function ShipShootBase.update(self, dt)
     
     for i, bullet in ipairs(self.spawnedBullets) do
         if bullet.y + bullet.offsetY < 0 then
-            table.remove(self.spawnedBullets, i)
+            self.bulletSpawner.despawn(table.remove(self.spawnedBullets, i))
             break
         end
     end
@@ -45,7 +46,7 @@ function ShipShootBase:isReadyToShoot()
 end
 
 function ShipShootBase:bulletHit(index)
-    table.remove(self.spawnedBullets, index)
+    self.bulletSpawner.despawn(table.remove(self.spawnedBullets, index))
 end
 
 return ShipShootBase

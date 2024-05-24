@@ -1,5 +1,5 @@
 local EnemySpawner = require("Scripts/Managers/EnemySpawner")
-local Model = require("Scripts/Models/Model")
+local LevelModel = require("Scripts/Models/LevelModel")
 local ScreenSize = require("Scripts/Models/ScreenSize")
 
 local LevelManager = {}
@@ -10,23 +10,24 @@ local currentWave = nil
 local currentLevelIndex = 1
 local spawnTimer = 0
 local nextSpawnTime = 0
-local lastLevelIndex = 0
 local currentWaveIndex = 1
 
 local spawnedEnemies = {}
 
 math.randomseed(os.clock())
 
-LevelManager.init = function(levelParams, enemyParams)
+LevelManager.init = function(levelNumber, levelDataParam, enemyParams)
     print("Level manager init!")
     EnemySpawner.init(enemyParams)
-    levelData = levelParams
-    currentLevel = levelData[1]
-    currentWave = currentLevel.waves[1]
-    lastLevelIndex = #levelData
-    spawnTimer = 0
-    spawnedEnemies = {}
     
+    currentLevelIndex = levelNumber
+    currentLevel = levelDataParam
+    currentWave = currentLevel.waves[1]
+    spawnTimer = 0
+    nextSpawnTime = levelDataParam.waveSpawnTime
+    currentWaveIndex = 1
+    spawnedEnemies = {}
+    spawnedDrops = {}
 end
 
 
@@ -34,46 +35,39 @@ LevelManager.update = function(dt)
   
     spawnTimer = spawnTimer + dt
     
-    if currentLevelIndex > 0 then
-        if #currentWave.enemies > 0 then
-            if spawnTimer > nextSpawnTime then
-                local index = math.random(1, #currentWave.enemies)
-                local enemy = currentWave.enemies[index]
-                enemy.count = enemy.count -1
-                print("Level: " .. currentLevelIndex .. "  Wave: " .. currentWaveIndex .. "  spawn enemy type: " .. enemy.enemyType .. "  remaining: " .. enemy.count)
-                local enemySpawned = EnemySpawner.spawn(enemy.enemyType)
-                table.insert(spawnedEnemies, enemySpawned)
-                
-                if enemy.count == 0 then
-                    table.remove(currentWave.enemies, index)
-                end
-                
-                spawnTimer = 0
-                nextSpawnTime = math.random(currentWave.minSpawnTime, currentWave.maxSpawnTime)
-                
+    if #currentWave.enemies > 0 then
+        if spawnTimer > nextSpawnTime then
+            local index = math.random(1, #currentWave.enemies)
+            local enemy = currentWave.enemies[index]
+            if enemy == nil then
+              print("fdsf")
             end
-          
+            enemy.count = enemy.count -1
+            print("Level: " .. currentLevelIndex .. "  Wave: " .. currentWaveIndex .. "  spawn enemy type: " .. enemy.enemyType .. "  remaining: " .. enemy.count)
+            local enemySpawned = EnemySpawner.spawn(enemy.enemyType)
+            table.insert(spawnedEnemies, enemySpawned)
+            
+            if enemy.count == 0 then
+                table.remove(currentWave.enemies, index)
+            end
+            
+            spawnTimer = 0
+            nextSpawnTime = math.random(currentWave.minSpawnTime, currentWave.maxSpawnTime)
+            
+        end
+      
+    elseif #spawnedEnemies == 0 and #spawnedDrops == 0 then
+        
+        currentWaveIndex = currentWaveIndex + 1
+        
+        if currentWaveIndex <= #currentLevel.waves then
+            currentWave = currentLevel.waves[currentWaveIndex]
+            print("Next wave: " .. currentWaveIndex)
         else
-            currentWaveIndex = currentWaveIndex + 1
-            if currentWaveIndex > #currentLevel.waves then
-                currentWaveIndex = 1
-          
-                currentLevelIndex = currentLevelIndex + 1
-                if currentLevelIndex <= lastLevelIndex then
-                    currentLevel = levelData[currentLevelIndex]
-                    currentWave = currentLevel.waves[currentWaveIndex]
-                    print("next level")
-                else
-                    currentLevelIndex = -1
-                    print("End of the game")
-                end
-            else
-                currentWave = currentLevel.waves[currentWaveIndex]
-                print("Next wave")
-            end
+            gStateMachine:change("play", currentLevelIndex + 1)
+            return
         end
     end
-    
     
     for i, enemy in ipairs(spawnedEnemies) do
         if enemy.y - enemy.offsetY > ScreenSize.screenHeight then
@@ -86,8 +80,7 @@ LevelManager.update = function(dt)
     for i, enemy in pairs(spawnedEnemies) do
         enemy:update(dt)
     end
-    
-end
+end  
 
 LevelManager.draw = function()
     for i, enemy in ipairs(spawnedEnemies) do
@@ -95,7 +88,7 @@ LevelManager.draw = function()
     end
 end
 
-LevelManager.removeEnemy = function(index)
+LevelManager.destroyEnemy = function(index)
     local enemy = table.remove(spawnedEnemies, index)
     EnemySpawner.despawn(enemy)
 end

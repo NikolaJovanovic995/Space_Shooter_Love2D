@@ -5,6 +5,7 @@ local ShipShootTripleAngle = classes.class(ShipShootBaseCls)
 
 local direction = math.sin(1)
 local angle = math.pi / 4
+local offset = 4
 
 
 function ShipShootTripleAngle:shoot(bulletType, x, y)
@@ -13,7 +14,7 @@ function ShipShootTripleAngle:shoot(bulletType, x, y)
       
         local bullet
         bullet = self.bulletSpawner.spawn(bulletType)
-        bullet:setPositionAndVector(x - 4, y, -direction, -direction, -angle)
+        bullet:setPositionAndVector(x - offset, y, -direction, -direction, -angle)
         table.insert(self.spawnedBullets, bullet)
         
         bullet = self.bulletSpawner.spawn(bulletType)
@@ -21,10 +22,8 @@ function ShipShootTripleAngle:shoot(bulletType, x, y)
         table.insert(self.spawnedBullets, bullet)
         
         bullet = self.bulletSpawner.spawn(bulletType)
-        bullet:setPositionAndVector(x + 4, y, direction, -direction, angle)
+        bullet:setPositionAndVector(x + offset, y, direction, -direction, angle)
         table.insert(self.spawnedBullets, bullet)
-        
-        print("Spawn triple angle bullet")
     end
 end
 

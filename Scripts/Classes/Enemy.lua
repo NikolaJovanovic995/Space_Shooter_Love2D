@@ -23,9 +23,10 @@ function Enemy:init(params)
     
 end
 
-function Enemy:reset()
+function Enemy:reset(params)
     self.x = math.random( self.offsetX, ScreenSize.screenWidth - self.offsetX)
     self.y = - self.h
+    self.health = params.health
 end
 
 function Enemy:update(dt)  

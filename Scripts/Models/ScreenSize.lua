@@ -4,5 +4,4 @@ local ScreenSize = {
     screenWidth = love.graphics.getWidth()
 }
 
-
 return ScreenSize

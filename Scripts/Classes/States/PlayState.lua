@@ -13,64 +13,75 @@ local explosions = nil
 local LevelManager = require("Scripts/Managers/LevelManager")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 local Model = require("Scripts/Models/Model")
+local LevelModel = require("Scripts/Models/LevelModel")
 local UserInput = require("Scripts/Models/UserInput")
-local mathUtil = require ("Scripts/Utils/MathUtils")
+local mathUtil = require ("Scripts/Utils/MathUtil")
+local objectUtil = require ("Scripts/Utils/ObjectUtil")
 
 function PlayState:init()
   
-    LevelManager.init(Model.levelParams, Model.enemies)
+    LevelModel.init()
+  
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
     explosions = ExplosionsCls.new( Model.explosionsParams )
+end
+
+function PlayState:enter(level)
+  
+    if level > #LevelModel.levels then
+        gStateMachine:change('score', {
+            score = ship.score,
+            msg = "YOU WON"
+        })
+    else
+        LevelManager.init(level, objectUtil.deepCopy( LevelModel.levels[level]), LevelModel.enemies)
+    end
 end
 
 function PlayState:update(dt)
     
     stars:update(dt)
     ship:update(dt)
-    LevelManager.update(dt)
     explosions:update(dt)
-    
-    checkCollisions()
-    
+    LevelManager.update(dt)
 
-    -- reset if we get to the ground
-    --[[
-    if self.bird.y > VIRTUAL_HEIGHT - 15 then
-        sounds['hurt']:play()
-
-        gStateMachine:change('score', {
-            score = self.score
-        })
-    end]]
+    PlayState:checkCollisions()
 end
 
 function PlayState:render()
     
-    love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
     stars:draw()
     ship:draw()
     LevelManager.draw()
     explosions:draw(dt)
     
-    --love.graphics.print("You Win!", 180, 350)
-    love.graphics.print("HP: " .. ship.health , 180, 30)
-    love.graphics.print("FPS: " .. love.timer.getFPS() , 30, 30)
+    love.graphics.print("HP: " .. ship.health , 30, 30)
+    love.graphics.print("SCORE: " .. ship.score , 180, 30)
+    love.graphics.print("FPS: " .. love.timer.getFPS() , 360, 30)
 end
 
 
-
-function checkCollisions()
+function PlayState:checkCollisions()
   
     for i, enemy in ipairs(LevelManager.SpawnedEnemies()) do
       
         if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
           
             print("Player got hit")
-            isGameOver = ship:makeDamage(enemy.impactDamage)
+            local isGameOver = ship:makeDamage(enemy.impactDamage)
+            
+            if isGameOver then
+                gStateMachine:change('score', {
+                    score = ship.score,
+                    msg = "YOU LOST"
+                })
+                return
+            end
+            
             local isEnemyDead = enemy:makeDamage(i, enemy.health)
             if isEnemyDead then
-                LevelManager.removeEnemy(i)
+                LevelManager.destroyEnemy(i)
                 explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
             end
             break
@@ -83,8 +94,9 @@ function checkCollisions()
                     local destroyed = enemy:makeDamage(i, bullet.damage)
                     ship.shooting:bulletHit(j)
                     if destroyed then
-                        LevelManager.removeEnemy(i)
+                        LevelManager.destroyEnemy(i)
                         explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)
+                        ship.score = ship.score + enemy.pointsValue
                     end
                     return
                 end
@@ -92,16 +104,6 @@ function checkCollisions()
         end
     end
   
-end
-
-
-function PlayState:enter()
-
-end
-
-
-function PlayState:exit()
-
 end
 
 return PlayState

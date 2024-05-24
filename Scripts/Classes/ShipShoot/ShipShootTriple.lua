@@ -3,6 +3,8 @@ local ShipShootBaseCls = require("Scripts/Classes/ShipShoot/ShipShootBase")
 
 local ShipShootTriple = classes.class(ShipShootBaseCls)
 
+local offset = 10
+
 function ShipShootTriple:shoot(bulletType, x, y)
   
     if self.super.isReadyToShoot(self) then
@@ -10,7 +12,7 @@ function ShipShootTriple:shoot(bulletType, x, y)
         local bullet
         
         bullet = self.bulletSpawner.spawn(bulletType)
-        bullet:setPositionAndVector(x - 10, y, 0, -1)
+        bullet:setPositionAndVector(x - offset, y, 0, -1)
         table.insert(self.spawnedBullets, bullet)
         
         bullet = self.bulletSpawner.spawn(bulletType)
@@ -18,10 +20,8 @@ function ShipShootTriple:shoot(bulletType, x, y)
         table.insert(self.spawnedBullets, bullet)
         
         bullet = self.bulletSpawner.spawn(bulletType)
-        bullet:setPositionAndVector(x + 10, y, 0, -1)
+        bullet:setPositionAndVector(x + offset, y, 0, -1)
         table.insert(self.spawnedBullets, bullet)
-        
-        print("Spawn triple bullet")
     end
 end
 

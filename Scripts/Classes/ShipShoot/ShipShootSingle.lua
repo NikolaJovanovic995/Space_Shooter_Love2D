@@ -10,7 +10,6 @@ function ShipShootSingle:shoot(bulletType, x, y)
         local bullet = self.bulletSpawner.spawn(bulletType)
         bullet:setPositionAndVector(x, y, 0, -1)
         table.insert(self.spawnedBullets, bullet )
-        print("Spawn single bullet")
     end
 end
 

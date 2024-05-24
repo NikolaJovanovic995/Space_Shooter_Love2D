@@ -9,7 +9,6 @@ BulletSpawner.init = function(params)
     bulletsConfig = params
 end
 
-
 BulletSpawner.spawn = function(bulletType)
     if bulletsPool[bulletType] == nil or #bulletsPool[bulletType] == 0 then
         print("No bullets in pool of type: " .. bulletType)
@@ -32,6 +31,5 @@ BulletSpawner.despawn = function(bullet)
     print("Return bullet in pool for bullet type: ".. bullet.bulletType)
     table.insert(bulletsPool[bullet.bulletType], bullet)
 end
-
 
 return BulletSpawner

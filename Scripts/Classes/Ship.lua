@@ -2,7 +2,7 @@ local classes = require("Scripts/Classes/classes")
 local ScreenSize = require("Scripts/Models/ScreenSize")
 local UserInput = require("Scripts/Models/UserInput")
 local ShipShootingManager = require("Scripts/Managers/ShipShootingManager")
-local MathUtil = require("Scripts/Utils/MathUtils")
+local MathUtil = require("Scripts/Utils/MathUtil")
 local ScreenObject = require("Scripts/Classes/ScreenObject")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
 
@@ -16,6 +16,7 @@ function Ship:init(params)
     
     self.health = params.health
     self.speed = params.speed
+    self.score = 0
     self.x = ScreenSize.screenWidth / 2
     self.y = ScreenSize.screenHeight * 3 / 4
     self.rightBoundry = ScreenSize.screenWidth - self.offsetX

@@ -23,7 +23,7 @@ function Ship:init(params)
     self.bottomBoundry = ScreenSize.screenHeight - self.offsetY
     
     ShipShootingManager.init()
-    self.shooting = ShipShootingManager.getShooting("tripleAngle")
+    self.shooting = ShipShootingManager.getShooting("single")
 end
 
 function Ship:update(dt)

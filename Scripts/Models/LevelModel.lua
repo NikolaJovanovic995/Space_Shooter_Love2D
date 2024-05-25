@@ -15,18 +15,18 @@ LevelModel.levels = {
                       drops = {
                         { 
                             dropType = "hp_small",
-                            dropTime = 10     
+                            dropTime = 1     
                         }
                       }
                   }, -- wave 1
                   {   
                       minSpawnTime = 2,
                       maxSpawnTime = 3,
-                      enemies = { { enemyType = "enemy_2" , count = 1 } } ,
+                      enemies = { { enemyType = "enemy_2" , count = 2 } } ,
                       drops = {
                         { 
                             dropType = "coin_small",
-                            dropTime = 10     
+                            dropTime = 3   
                         }
                       }
                   }, -- wave 2
@@ -37,7 +37,7 @@ LevelModel.levels = {
                       drops = {
                         { 
                             dropType = "triple_short",
-                            dropTime = 1     
+                            dropTime = 5     
                         }
                       }
                   } -- wave 3

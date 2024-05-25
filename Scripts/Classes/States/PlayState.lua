@@ -10,7 +10,6 @@ local stars = nil
 local ExplosionsCls = require("Scripts/Classes/Explosions")
 local explosions = nil
 
-
 local SoundManager = require("Scripts/Managers/SoundManager")
 local LevelManager = require("Scripts/Managers/LevelManager")
 local Model = require("Scripts/Models/Model")
@@ -22,6 +21,7 @@ local objectUtil = require ("Scripts/Utils/ObjectUtil")
 function PlayState:init()
   
     LevelModel.init()
+    LevelManager.init()
   
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
@@ -36,7 +36,7 @@ function PlayState:enter(level)
             msg = "YOU WON"
         })
     else
-        LevelManager.init(level, objectUtil.deepCopy( LevelModel.levels[level]), LevelModel.enemies)
+        LevelManager.startLevel(level, objectUtil.deepCopy( LevelModel.levels[level]))
     end
 end
 

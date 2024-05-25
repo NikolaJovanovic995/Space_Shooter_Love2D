@@ -4,8 +4,6 @@ local ScreenObject = require("Scripts/Classes/ScreenObject")
 local Bullet = classes.class(ScreenObject)
 
 function Bullet:init(params)
-    print("Bullet init!")
-    
     self.super:init(params)
     
     self.bulletType = params.bulletType

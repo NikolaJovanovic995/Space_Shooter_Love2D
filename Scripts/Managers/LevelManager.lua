@@ -1,34 +1,41 @@
 local ObjectPoolCls = require("Scripts/Classes/ObjectPool")
 local EnemyCls = require("Scripts/Classes/Enemy")
+local DropCls = require("Scripts/Classes/Drop")
 local LevelModel = require("Scripts/Models/LevelModel")
 local ScreenSize = require("Scripts/Models/ScreenSize")
 
 local LevelManager = {}
 
 local enemyObjectPool = nil
+local dropObjectPool = nil
 local levelData = nil
 local currentLevel = nil
 local currentWave = nil
 local currentLevelIndex = 1
+local waveTimer = 0
 local spawnTimer = 0
 local nextSpawnTime = 0
 local currentWaveIndex = 1
 
 local spawnedEnemies = {}
+local spawnedDrops = {}
 
 math.randomseed(os.clock())
 
 LevelManager.init = function(levelNumber, levelDataParam, enemyParams)
     print("Level manager init!")
-    enemyObjectPool = ObjectPoolCls.new(
-      {
-          objectClass = EnemyCls,
-          objectConfigs = enemyParams
-      })
+    
+    enemyObjectPool = ObjectPoolCls.new( { objectClass = EnemyCls, objectConfigs = LevelModel.enemies })
+    dropObjectPool = ObjectPoolCls.new( { objectClass = DropCls, objectConfigs = LevelModel.drops })
+end
+
+LevelManager.startLevel = function(levelNumber, levelDataParam, enemyParams)
+    print("Start level: " .. levelNumber)
     
     currentLevelIndex = levelNumber
     currentLevel = levelDataParam
     currentWave = currentLevel.waves[1]
+    waveTimer = 0
     spawnTimer = 0
     nextSpawnTime = levelDataParam.waveSpawnTime
     currentWaveIndex = 1
@@ -38,18 +45,44 @@ end
 
 
 LevelManager.update = function(dt)
-  
+    waveTimer = waveTimer + dt
     spawnTimer = spawnTimer + dt
+    LevelManager.checkSpawnEnemy()
+    LevelManager.checkSpawnDrop()
+    LevelManager.updateSpawnedObjects(dt)
+end  
+
+LevelManager.draw = function()
+  
+    for i, enemy in ipairs(spawnedEnemies) do
+        enemy:draw()
+    end
+    for i, drop in ipairs(spawnedDrops) do
+        drop:draw()
+    end
+end
+
+LevelManager.destroyEnemy = function(index)
+    local enemy = table.remove(spawnedEnemies, index)
+    enemyObjectPool:despawn(enemy, enemy.enemyType)
+end
+
+LevelManager.SpawnedEnemies = function()
+    return spawnedEnemies
+end
+
+LevelManager.SpawnedDrops = function()
+    return spawnedDrops
+end
+
+LevelManager.checkSpawnEnemy = function()
     
     if #currentWave.enemies > 0 then
         if spawnTimer > nextSpawnTime then
             local index = math.random(1, #currentWave.enemies)
             local enemy = currentWave.enemies[index]
-            if enemy == nil then
-              print("fdsf")
-            end
             enemy.count = enemy.count -1
-            print("Level: " .. currentLevelIndex .. "  Wave: " .. currentWaveIndex .. "  spawn enemy type: " .. enemy.enemyType .. "  remaining: " .. enemy.count)
+            --print("Level: " .. currentLevelIndex .. "  Wave: " .. currentWaveIndex .. "  spawn enemy type: " .. enemy.enemyType .. "  remaining: " .. enemy.count)
             local enemySpawned = enemyObjectPool:spawn(enemy.enemyType)
             table.insert(spawnedEnemies, enemySpawned)
             
@@ -68,12 +101,27 @@ LevelManager.update = function(dt)
         
         if currentWaveIndex <= #currentLevel.waves then
             currentWave = currentLevel.waves[currentWaveIndex]
-            print("Next wave: " .. currentWaveIndex)
+            --print("Next wave: " .. currentWaveIndex)
         else
             gStateMachine:change("play", currentLevelIndex + 1)
             return
         end
     end
+end
+
+LevelManager.checkSpawnDrop = function()
+    
+    for i, drop in ipairs(currentWave.drops) do
+        if drop.dropTime < waveTimer then
+            local dropSpawned = dropObjectPool:spawn(drop.dropType)
+            table.insert(spawnedDrops, dropSpawned)
+            table.remove(currentWave.drops, i)
+            break
+        end
+    end
+end
+
+LevelManager.updateSpawnedObjects = function(dt)
     
     for i, enemy in ipairs(spawnedEnemies) do
         if enemy.y - enemy.offsetY > ScreenSize.screenHeight then
@@ -83,24 +131,22 @@ LevelManager.update = function(dt)
         end
     end
     
+    for i, drop in ipairs(spawnedDrops) do
+        if drop.y - drop.offsetY > ScreenSize.screenHeight then
+            local removeDrop = table.remove(spawnedDrops, i)
+            dropObjectPool:despawn(removeDrop, removeDrop.params.dropType)
+            break
+        end
+    end
+    
     for i, enemy in pairs(spawnedEnemies) do
         enemy:update(dt)
     end
-end  
-
-LevelManager.draw = function()
-    for i, enemy in ipairs(spawnedEnemies) do
-        enemy:draw()
+    
+    for i, drop in pairs(spawnedDrops) do
+        drop:update(dt)
     end
-end
-
-LevelManager.destroyEnemy = function(index)
-    local enemy = table.remove(spawnedEnemies, index)
-    enemyObjectPool:despawn(enemy, enemy.enemyType)
-end
-
-LevelManager.SpawnedEnemies = function()
-    return spawnedEnemies
+  
 end
 
 

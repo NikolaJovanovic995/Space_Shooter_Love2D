@@ -1,5 +1,5 @@
 local ScreenSize = require("Scripts/Models/ScreenSize")
-
+math.randomseed(os.clock())
 local Stars = classes.class()
 
 function Stars:init(params)
@@ -15,23 +15,26 @@ function Stars:init(params)
 end
 
 function Stars:update(dt)
-  
-    for i, star in ipairs(self.starsArr) do
-        local y = star.y + self.speed * dt
-        
-        if y > ScreenSize.screenHeight then
-          y = 0
+    local dist = self.speed * dt
+    local star = nil
+    local newY = 0
+    for i=1, #self.starsArr do
+        star = self.starsArr[i]
+        newY = star.y + dist
+        if newY > ScreenSize.screenHeight then
+          newY = 0
           star.x = math.random() * ScreenSize.screenWidth
         end
-        star.y = y
+        star.y = newY
     end
 end
 
 function Stars:draw()
   
     love.graphics.setColor(1, 1, 1)
-    
-    for i, star in ipairs(self.starsArr) do
+    local star = nil
+    for i=1, #self.starsArr do
+        star = self.starsArr[i]
         love.graphics.circle("fill", star.x, star.y, self.radius) -- Draw white circle with 100 segments.
     end
 end

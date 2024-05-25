@@ -47,7 +47,8 @@ function PlayState:update(dt)
     explosions:update(dt)
     LevelManager.update(dt)
 
-    PlayState:checkCollisions()
+    PlayState:checkEnemyCollisions()
+    PlayState:checkDropCollisions()
 end
 
 function PlayState:render()
@@ -63,8 +64,8 @@ function PlayState:render()
 end
 
 
-function PlayState:checkCollisions()
-  
+function PlayState:checkEnemyCollisions()
+    
     for i, enemy in ipairs(LevelManager.SpawnedEnemies()) do
       
         if mathUtil.isColliding(enemy.x, enemy.y, enemy.offsetX, enemy.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
@@ -112,6 +113,20 @@ function PlayState:checkCollisions()
         end
     end
   
+end
+
+function PlayState:checkDropCollisions()
+  
+    for i, drop in ipairs(LevelManager.SpawnedDrops()) do
+        if mathUtil.isColliding(drop.x, drop.y, drop.offsetX, drop.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
+          
+            print("Player pickup drop")
+            SoundManager.sounds.coin:play()
+            LevelManager.removeDrop(i)
+            ship:consumeDrop(objectUtil.deepCopy(drop))
+            break
+        end
+    end
 end
 
 return PlayState

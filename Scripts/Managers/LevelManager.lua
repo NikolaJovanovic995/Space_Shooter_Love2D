@@ -67,6 +67,11 @@ LevelManager.destroyEnemy = function(index)
     enemyObjectPool:despawn(enemy, enemy.enemyType)
 end
 
+LevelManager.removeDrop = function(index)
+    local drop = table.remove(spawnedDrops, index)
+    dropObjectPool:despawn(drop, drop.params.dropType)
+end
+
 LevelManager.SpawnedEnemies = function()
     return spawnedEnemies
 end
@@ -125,16 +130,14 @@ LevelManager.updateSpawnedObjects = function(dt)
     
     for i, enemy in ipairs(spawnedEnemies) do
         if enemy.y - enemy.offsetY > ScreenSize.screenHeight then
-            local removeEnemy = table.remove(spawnedEnemies, i)
-            enemyObjectPool:despawn(removeEnemy, removeEnemy.enemyType)
+            LevelManager.destroyEnemy(i) 
             break
         end
     end
     
     for i, drop in ipairs(spawnedDrops) do
         if drop.y - drop.offsetY > ScreenSize.screenHeight then
-            local removeDrop = table.remove(spawnedDrops, i)
-            dropObjectPool:despawn(removeDrop, removeDrop.params.dropType)
+            LevelManager.removeDrop(i)
             break
         end
     end

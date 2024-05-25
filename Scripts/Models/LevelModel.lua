@@ -14,7 +14,7 @@ LevelModel.levels = {
                       enemies = { { enemyType = "enemy_1" , count = 1 } }, 
                       drops = {
                         { 
-                            dropType = "hp_small",
+                            dropType = "triple_short",
                             dropTime = 1     
                         }
                       }
@@ -36,7 +36,7 @@ LevelModel.levels = {
                       enemies = { { enemyType = "enemy_3" , count = 1 } } ,
                       drops = {
                         { 
-                            dropType = "triple_short",
+                            dropType = "hp_small",
                             dropTime = 5     
                         }
                       }
@@ -55,7 +55,7 @@ LevelModel.levels = {
                         enemies = { { enemyType = "enemy_1" , count = 2 } } , 
                         drops = {
                           { 
-                              dropType = "hp_small",
+                              dropType = "tripleAngle_short",
                               dropTime = 1     
                           }
                         }
@@ -130,31 +130,38 @@ LevelModel.levels = {
 LevelModel.drops = {
     hp_small = {
                     dropType = "hp_small",
+                    effect = "health",
                     movementType = "straight",
                     assetName = "health",
-                    speed = 250,
+                    speed = 600,
                     amount = 20
                 },
     coin_small = {
                     dropType = "coin_small",
+                    effect = "points",
                     movementType = "straight",
                     assetName = "coin",
-                    speed = 400,
-                    duration = 10
+                    speed = 600,
+                    amount = 10
+
                 },
     triple_short = {
                     dropType = "triple_short",
+                    effect = "shooting",
                     movementType = "sin",
                     assetName = "fireRate",
-                    speed = 250,
-                    duration = 10
+                    speed = 600,
+                    duration = 10,
+                    shootingType = "triple"
                 },
     tripleAngle_short = {
                     dropType = "tripleAngle_short",
+                    effect = "shooting",
                     movementType = "sin",
                     assetName = "fireAngles",
-                    speed = 250,
-                    pointsValue = 2
+                    speed = 600,
+                    duration = 10,
+                    shootingType = "tripleAngle"
                 }
 }
 

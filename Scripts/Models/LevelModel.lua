@@ -22,7 +22,7 @@ LevelModel.levels = {
                   {   
                       minSpawnTime = 2,
                       maxSpawnTime = 3,
-                      enemies = { { enemyType = "enemy_2" , count = 2 } } ,
+                      enemies = { { enemyType = "enemy_2" , count = 1 } } ,
                       drops = {
                         { 
                             dropType = "coin_small",
@@ -52,17 +52,35 @@ LevelModel.levels = {
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_1" , count = 2 } } 
+                        enemies = { { enemyType = "enemy_1" , count = 2 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     }, -- wave 1
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_2" , count = 2 } } 
+                        enemies = { { enemyType = "enemy_2" , count = 2 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     }, -- wave 2
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_3" , count = 2 } } 
+                        enemies = { { enemyType = "enemy_3" , count = 2 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     } -- wave 3
                 }
     },
@@ -75,17 +93,35 @@ LevelModel.levels = {
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } 
+                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     }, -- wave 1
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } 
+                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     }, -- wave 2
                     {   
                         minSpawnTime = 2,
                         maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } 
+                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        drops = {
+                          { 
+                              dropType = "hp_small",
+                              dropTime = 1     
+                          }
+                        }
                     } -- wave 3
                 }
     }

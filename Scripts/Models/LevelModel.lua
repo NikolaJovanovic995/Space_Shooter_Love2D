@@ -150,7 +150,7 @@ LevelModel.drops = {
                     effect = "shooting",
                     movementType = "sin",
                     assetName = "fireRate",
-                    speed = 600,
+                    speed = 300,
                     duration = 10,
                     shootingType = "triple"
                 },
@@ -159,7 +159,7 @@ LevelModel.drops = {
                     effect = "shooting",
                     movementType = "sin",
                     assetName = "fireAngles",
-                    speed = 600,
+                    speed = 300,
                     duration = 10,
                     shootingType = "tripleAngle"
                 }

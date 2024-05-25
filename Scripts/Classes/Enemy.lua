@@ -1,7 +1,7 @@
 local classes = require("Scripts/Classes/classes")
 local ScreenSize = require("Scripts/Models/ScreenSize")
 local ScreenObject = require("Scripts/Classes/ScreenObject")
-local EnemyMoveManager = require("Scripts/Managers/EnemyMoveManager")
+local MovementManager = require("Scripts/Managers/MovementManager")
 
 local Enemy = classes.class(ScreenObject)
 
@@ -12,7 +12,7 @@ function Enemy:init(params)
     
     self.super:init(params)
     
-    self.movement = EnemyMoveManager.getMovement(params.movementType)
+    self.movement = MovementManager.getMovement(params.movementType)
     self.enemyType = params.enemyType
     self.x = math.random( self.offsetX, ScreenSize.screenWidth - self.offsetX)
     self.y = - self.h
@@ -43,6 +43,5 @@ function Enemy:makeDamage(index, damage)
         return false
     end
 end
-
 
 return Enemy

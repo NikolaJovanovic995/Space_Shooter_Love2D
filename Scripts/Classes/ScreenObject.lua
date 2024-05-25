@@ -7,6 +7,7 @@ function ScreenObject:init(params)
     local w = params.asset:getWidth()
     local h = params.asset:getHeight()
     self.asset = params.asset
+    self.speed = params.speed or 0
     self.w = w
     self.h = h 
     self.offsetX = w / 2

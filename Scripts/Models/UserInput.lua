@@ -1,3 +1,4 @@
+
 local UserInput = {
     up = false,
     down = false,

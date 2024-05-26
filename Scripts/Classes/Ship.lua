@@ -5,6 +5,7 @@ local ShipShootingManager = require("Scripts/Managers/ShipShootingManager")
 local MathUtil = require("Scripts/Utils/MathUtil")
 local ScreenObject = require("Scripts/Classes/ScreenObject")
 local AssetsManager = require("Scripts/Managers/AssetsManager")
+local SoundManager = require("Scripts/Managers/SoundManager")
 
 local Ship = classes.class(ScreenObject)
 
@@ -88,11 +89,14 @@ function Ship:consumeDrop(drop)
     local effect = drop.params.effect 
     if effect == "health" then
         self.health = self.health + drop.params.amount
+        SoundManager.sounds.powerup:play()
     elseif effect == "points" then
         self.score = self.score + drop.params.amount
+        SoundManager.sounds.coin:play()
     elseif effect == "shooting" then
         Ship:setShootingType(drop.params.shootingType)
         self.activePowerups = {drop}
+        SoundManager.sounds.powerup:play()
     end
 end
 

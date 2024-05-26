@@ -27,11 +27,11 @@ end
 function ScoreState:render()
     
     love.graphics.printf(self.msg, 0, 100, ScreenSize.screenWidth, "center")
-    love.graphics.printf("Your score is: " .. self.score, 0, 160, ScreenSize.screenWidth, "center")
+    love.graphics.printf("YOUR SCORE IS: " .. self.score, 0, 160, ScreenSize.screenWidth, "center")
     if self.isHighScore then
         love.graphics.printf("NEW HIGHSCORE", 0, 220, ScreenSize.screenWidth, "center")
     end
-    love.graphics.printf("Press Enter to Play Again!", 0, 280, ScreenSize.screenWidth, "center")
+    love.graphics.printf("PRESS ENTER TO PLAY AGAIN!", 0, 280, ScreenSize.screenWidth, "center")
 
 end
 

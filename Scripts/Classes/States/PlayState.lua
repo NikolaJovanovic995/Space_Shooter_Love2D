@@ -132,7 +132,6 @@ function PlayState:checkDropCollisions()
         if mathUtil.isColliding(drop.x, drop.y, drop.offsetX, drop.offsetY, ship.x, ship.y, ship.offsetX, ship.offsetY)  then
           
             print("Player pickup drop")
-            SoundManager.sounds.coin:play()
             LevelManager.removeDrop(i)
             ship:consumeDrop(objectUtil.deepCopy(drop))
             break

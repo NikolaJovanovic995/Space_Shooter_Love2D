@@ -23,8 +23,8 @@ end
 
 function TitleScreenState:render()
   
-    love.graphics.printf("Space Shooter Game", 0, 100, ScreenSize.screenWidth, "center")
-    love.graphics.printf('Press ENTER to start!', 0, 160, ScreenSize.screenWidth, "center")
+    love.graphics.printf("SPACE SHOOTER GAME", 0, 100, ScreenSize.screenWidth, "center")
+    love.graphics.printf('PRESS ENTER TO START!', 0, 160, ScreenSize.screenWidth, "center")
 end
 
 return TitleScreenState

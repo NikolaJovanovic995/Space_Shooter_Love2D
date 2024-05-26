@@ -18,7 +18,8 @@ local TitleScreenStateCls = require("Scripts/Classes/States/TitleScreenState")
 local PlayStateCls = require("Scripts/Classes/States/PlayState")
 local ScoreStateCls = require("Scripts/Classes/States/ScoreState")
 
-local PlayState = nil
+local playState = nil
+local gameStateMachine = nil
 
 local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
@@ -33,28 +34,28 @@ function love.load()
     SoundManager.init()
     Model.init()
     
-    PlayState = PlayStateCls.new()
+    playState = PlayStateCls.new()
     
-    gStateMachine = StateMashineCls.new(
+    gameStateMachine = StateMashineCls.new(
       {
-        ['title'] = function() return TitleScreenStateCls.new() end,
-        ['play'] = function() return PlayState end,
-        ['play-new'] = function()  PlayState =  PlayStateCls.new() return PlayState end ,
-        ['score'] = function() return ScoreStateCls.new() end
+        ["title"] = function() return TitleScreenStateCls.new() end,
+        ["play"] = function() return playState end,
+        ["play-new"] = function()  playState =  PlayStateCls.new() return playState end ,
+        ["score"] = function() return ScoreStateCls.new() end
       }
     )
-    gStateMachine:change('title')
+    gameStateMachine:change("title", gameStateMachine)
 end
 
 function love.update(dt)
   
-    gStateMachine:update(dt)
+    gameStateMachine:update(dt)
 end
 
 
 function love.draw()
   
-    gStateMachine:render()
+    gameStateMachine:render()
 end
 
 

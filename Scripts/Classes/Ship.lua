@@ -92,7 +92,7 @@ function Ship:consumeDrop(drop)
         self.score = self.score + drop.params.amount
     elseif effect == "shooting" then
         Ship:setShootingType(drop.params.shootingType)
-        table.insert(self.activePowerups, drop)
+        self.activePowerups = {drop}
     end
 end
 

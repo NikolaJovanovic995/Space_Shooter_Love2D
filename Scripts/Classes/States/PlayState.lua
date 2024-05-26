@@ -17,6 +17,7 @@ local LevelModel = require("Scripts/Models/LevelModel")
 local UserInput = require("Scripts/Models/UserInput")
 local mathUtil = require ("Scripts/Utils/MathUtil")
 local objectUtil = require ("Scripts/Utils/ObjectUtil")
+local gameStateMachine = nil
 
 function PlayState:init()
   
@@ -28,15 +29,23 @@ function PlayState:init()
     explosions = ExplosionsCls.new( Model.explosionsParams )
 end
 
-function PlayState:enter(level)
+function PlayState:enter(params)
   
-    if level > #LevelModel.levels then
-        gStateMachine:change('score', {
+    gameStateMachine = params.stateMachine
+    
+    if params.level > #LevelModel.levels then
+        gameStateMachine:change("score", {
+            stateMachine = gameStateMachine,
             score = ship.score,
             msg = "YOU WON"
         })
     else
-        LevelManager.startLevel(level, objectUtil.deepCopy( LevelModel.levels[level]))
+        LevelManager.startLevel(
+        {
+            stateMachine = gameStateMachine,
+            level = params.level,
+            levelData = objectUtil.deepCopy(LevelModel.levels[params.level])
+        })
     end
 end
 
@@ -76,7 +85,8 @@ function PlayState:checkEnemyCollisions()
             local isGameOver = ship:makeDamage(enemy.impactDamage)
             
             if isGameOver then
-                gStateMachine:change('score', {
+                gameStateMachine:change("score", {
+                    stateMachine = gameStateMachine,
                     score = ship.score,
                     msg = "YOU LOST"
                 })

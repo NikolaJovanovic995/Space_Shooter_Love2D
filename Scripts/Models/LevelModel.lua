@@ -45,8 +45,6 @@ LevelModel.levels = {
     },
     {
         levelName = "Level 2",
-        minSpawnTime = 2,
-        maxSpawnTime = 3,
         waveSpawnTime = 3,
         waves = { 
                     {   
@@ -86,8 +84,6 @@ LevelModel.levels = {
     },
     {
         levelName = "Level 3",
-        minSpawnTime = 1,
-        maxSpawnTime = 3,
         waveSpawnTime = 3,
         waves = { 
                     {   
@@ -180,7 +176,7 @@ LevelModel.enemies = {
                   enemyType = "enemy_2",
                   movementType = "straight",
                   assetName = "enemy_2",
-                  speed = 400,
+                  speed = 500,
                   health = 5,
                   impactDamage = 50,
                   pointsValue = 2
@@ -190,7 +186,7 @@ LevelModel.enemies = {
                   movementType = "sin",
                   assetName = "enemy_2",
                   speed = 250,
-                  health = 10,
+                  health = 20,
                   impactDamage = 10,
                   pointsValue = 2
               }

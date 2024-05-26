@@ -19,25 +19,27 @@ local currentWaveIndex = 1
 
 local spawnedEnemies = {}
 local spawnedDrops = {}
+local gameStateMachine = nil
 
 math.randomseed(os.clock())
 
-LevelManager.init = function(levelNumber, levelDataParam, enemyParams)
+LevelManager.init = function()
     print("Level manager init!")
     
     enemyObjectPool = ObjectPoolCls.new( { objectClass = EnemyCls, objectConfigs = LevelModel.enemies })
     dropObjectPool = ObjectPoolCls.new( { objectClass = DropCls, objectConfigs = LevelModel.drops })
 end
 
-LevelManager.startLevel = function(levelNumber, levelDataParam, enemyParams)
-    print("Start level: " .. levelNumber)
+LevelManager.startLevel = function(params)
+    print("Start level: " .. params.level)
     
-    currentLevelIndex = levelNumber
-    currentLevel = levelDataParam
+    gameStateMachine = params.stateMachine
+    currentLevelIndex = params.level
+    currentLevel = params.levelData 
     currentWave = currentLevel.waves[1]
+    nextSpawnTime = currentLevel.waveSpawnTime
     waveTimer = 0
     spawnTimer = 0
-    nextSpawnTime = levelDataParam.waveSpawnTime
     currentWaveIndex = 1
     spawnedEnemies = {}
     spawnedDrops = {}
@@ -108,7 +110,10 @@ LevelManager.checkSpawnEnemy = function()
             currentWave = currentLevel.waves[currentWaveIndex]
             --print("Next wave: " .. currentWaveIndex)
         else
-            gStateMachine:change("play", currentLevelIndex + 1)
+            gameStateMachine:change("play", {
+                stateMachine = gameStateMachine,
+                level = currentLevelIndex + 1
+            })
             return
         end
     end

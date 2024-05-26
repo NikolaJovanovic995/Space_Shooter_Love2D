@@ -4,10 +4,20 @@ local BaseState = require("Scripts/Classes/States/BaseState")
 
 TitleScreenState = classes.class(BaseState)
 
+local gameStateMachine = nil
+
+function TitleScreenState:enter(stateMachine)
+    
+    gameStateMachine = stateMachine
+end
+
 function TitleScreenState:update(dt)
   
     if UserInput.enter then
-        gStateMachine:change("play", 1)
+        gameStateMachine:change("play", {
+            stateMachine = gameStateMachine,
+            level = 1
+        })
     end
 end
 

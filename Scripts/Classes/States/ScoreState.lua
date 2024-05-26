@@ -3,11 +3,12 @@ local ScreenSize = require("Scripts/Models/ScreenSize")
 local BaseState = require("Scripts/Classes/States/BaseState")
 
 local fileName = "highscore.txt"
+local gameStateMachine = nil
 
 ScoreState = classes.class(BaseState)
 
 function ScoreState:enter(params)
-  
+    gameStateMachine = params.stateMachine
     self.score = params.score
     self.msg = params.msg
     self.isHighScore = ScoreState:updateHighScore(fileName, self.score)
@@ -16,7 +17,10 @@ end
 function ScoreState:update(dt)
   
     if UserInput.enter then
-        gStateMachine:change('play-new', 1)
+        gameStateMachine:change("play-new", {
+            stateMachine = gameStateMachine,
+            level = 1
+        })
     end
 end
 

@@ -3,13 +3,12 @@ PlayState = classes.class(BaseState)
 
 local ShipCls = require("Scripts/Classes/Ship")
 local ship = nil
-
 local StarsCls = require("Scripts/Classes/Stars")
 local stars = nil
+local EffectsCls = require("Scripts/Classes/Effects")
+local effects = nil
 
-local ExplosionsCls = require("Scripts/Classes/Explosions")
-local explosions = nil
-
+local ScreenSize = require("Scripts/Models/ScreenSize")
 local SoundManager = require("Scripts/Managers/SoundManager")
 local LevelManager = require("Scripts/Managers/LevelManager")
 local Model = require("Scripts/Models/Model")
@@ -26,7 +25,7 @@ function PlayState:init()
   
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
-    explosions = ExplosionsCls.new( Model.explosionsParams )
+    effects = EffectsCls.new( Model.explosionsParams )
 end
 
 function PlayState:enter(params)
@@ -53,7 +52,7 @@ function PlayState:update(dt)
     
     stars:update(dt)
     ship:update(dt)
-    explosions:update(dt)
+    effects:update(dt)
     LevelManager.update(dt)
 
     PlayState:checkEnemyCollisions()
@@ -65,11 +64,11 @@ function PlayState:render()
     stars:draw()
     ship:draw()
     LevelManager.draw()
-    explosions:draw(dt)
+    effects:draw(dt)
     
-    love.graphics.print("HP: " .. ship.health , 30, 30)
-    love.graphics.print("SCORE: " .. ship.score , 180, 30)
-    love.graphics.print("FPS: " .. love.timer.getFPS() , 360, 30)
+    love.graphics.printf("HP: " .. ship.health , 20, 20, ScreenSize.screenWidth, "left")
+    love.graphics.printf("SCORE: " .. ship.score , 0, 20, ScreenSize.screenWidth, "center")
+    --love.graphics.print("FPS: " .. love.timer.getFPS() , 360, 60)
 end
 
 
@@ -97,7 +96,7 @@ function PlayState:checkEnemyCollisions()
             if isEnemyDead then
               
                 LevelManager.destroyEnemy(i)
-                explosions:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2)
+                effects:spawnExplosion((enemy.x + ship.x) / 2, (enemy.y + ship.y) / 2, enemy.impactDamage)
                 SoundManager.sounds.explosion:play()
             end
             break
@@ -109,12 +108,14 @@ function PlayState:checkEnemyCollisions()
                     print("Enemy hit")
                     local destroyed = enemy:makeDamage(i, bullet.damage)
                     ship.shooting:bulletHit(j)
+
                     if destroyed then
                         LevelManager.destroyEnemy(i)
-                        explosions:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2)
+                        effects:spawnExplosion((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2, bullet.damage)
                         ship.score = ship.score + enemy.pointsValue
                         SoundManager.sounds.explosion:play()
                     else
+                        effects:spawnDamageIndicator((enemy.x + bullet.x) / 2, (enemy.y + bullet.y) / 2, bullet.damage)
                         SoundManager.sounds.hit:play()
                     end
                     return

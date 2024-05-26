@@ -62,6 +62,8 @@ LevelManager.draw = function()
     for i, drop in ipairs(spawnedDrops) do
         drop:draw()
     end
+    
+    love.graphics.printf("LEVEL: "  .. currentLevelIndex .. "  WAVE: " ..  currentLevelIndex, -20 , 20, ScreenSize.screenWidth, "right")
 end
 
 LevelManager.destroyEnemy = function(index)

@@ -48,7 +48,7 @@ function ShipShootBase:isReadyToShoot()
 end
 
 function ShipShootBase:bulletHit(index)
-    local bullet = table.remove(self.spawnedBullets, i)
+    local bullet = table.remove(self.spawnedBullets, index)
     self.bulletObjectPool:despawn(bullet, bullet.bulletType)
 end
 

@@ -11,10 +11,10 @@ LevelModel.levels = {
                   {   
                       minSpawnTime = 2,
                       maxSpawnTime = 3,
-                      enemies = { { enemyType = "enemy_1" , count = 1 } }, 
+                      enemies = { { enemyType = "enemy_1" , count = 5 } }, 
                       drops = {
                         { 
-                            dropType = "triple_short",
+                            dropType = "coin_small",
                             dropTime = 1     
                         }
                       }
@@ -22,22 +22,22 @@ LevelModel.levels = {
                   {   
                       minSpawnTime = 2,
                       maxSpawnTime = 3,
-                      enemies = { { enemyType = "enemy_2" , count = 1 } } ,
+                      enemies = { { enemyType = "enemy_2" , count = 5 } } ,
                       drops = {
                         { 
-                            dropType = "coin_small",
-                            dropTime = 3   
+                            dropType = "triple_short",
+                            dropTime = 2   
                         }
                       }
                   }, -- wave 2
                   {   
                       minSpawnTime = 2,
                       maxSpawnTime = 3,
-                      enemies = { { enemyType = "enemy_3" , count = 1 } } ,
+                      enemies = { { enemyType = "enemy_3" , count = 5 } } ,
                       drops = {
                         { 
                             dropType = "hp_small",
-                            dropTime = 5     
+                            dropTime = 3     
                         }
                       }
                   } -- wave 3
@@ -48,32 +48,44 @@ LevelModel.levels = {
         waveSpawnTime = 3,
         waves = { 
                     {   
-                        minSpawnTime = 2,
+                        minSpawnTime = 1,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_1" , count = 2 } } , 
+                        enemies = { { enemyType = "enemy_1" , count = 2 }, { enemyType = "enemy_2" , count = 2 }, { enemyType = "enemy_3" , count = 2 } } , 
                         drops = {
                           { 
                               dropType = "tripleAngle_short",
-                              dropTime = 1     
-                          }
+                              dropTime = 3     
+                          },
+                          { 
+                            dropType = "coin_small",
+                            dropTime = 5     
+                        }
                         }
                     }, -- wave 1
                     {   
-                        minSpawnTime = 2,
+                        minSpawnTime = 1,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_2" , count = 2 } } , 
+                        enemies = { { enemyType = "enemy_1" , count = 5 }, { enemyType = "enemy_2" , count = 5 }, { enemyType = "enemy_3" , count = 5 } } , 
                         drops = {
                           { 
                               dropType = "hp_small",
-                              dropTime = 1     
+                              dropTime = 5     
+                          },
+                          { 
+                            dropType = "coin_small",
+                            dropTime = 7    
                           }
                         }
                     }, -- wave 2
                     {   
-                        minSpawnTime = 2,
+                        minSpawnTime = 1,
                         maxSpawnTime = 3,
-                        enemies = { { enemyType = "enemy_3" , count = 2 } } , 
+                        enemies = { { enemyType = "enemy_1" , count = 10 }, { enemyType = "enemy_2" , count = 10 }, { enemyType = "enemy_3" , count = 10 } } , 
                         drops = {
+                          { 
+                            dropType = "triple_short",
+                            dropTime = 3   
+                          },
                           { 
                               dropType = "hp_small",
                               dropTime = 1     
@@ -87,20 +99,24 @@ LevelModel.levels = {
         waveSpawnTime = 3,
         waves = { 
                     {   
-                        minSpawnTime = 2,
-                        maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        minSpawnTime = 1,
+                        maxSpawnTime = 2,
+                        enemies = { { enemyType = "enemy_1" , count = 10 }, { enemyType = "enemy_2" , count = 10 }, { enemyType = "enemy_3" , count = 10 } } , 
                         drops = {
                           { 
                               dropType = "hp_small",
                               dropTime = 1     
+                          },
+                          { 
+                            dropType = "coin_small",
+                            dropTime = 5   
                           }
                         }
                     }, -- wave 1
                     {   
-                        minSpawnTime = 2,
-                        maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        minSpawnTime = 1,
+                        maxSpawnTime = 2,
+                        enemies = { { enemyType = "enemy_1" , count = 10 }, { enemyType = "enemy_2" , count = 10 }, { enemyType = "enemy_3" , count = 10 } } , 
                         drops = {
                           { 
                               dropType = "hp_small",
@@ -109,9 +125,9 @@ LevelModel.levels = {
                         }
                     }, -- wave 2
                     {   
-                        minSpawnTime = 2,
-                        maxSpawnTime = 4,
-                        enemies = { { enemyType = "enemy_3" , count = 3 } } , 
+                        minSpawnTime = 1,
+                        maxSpawnTime = 2,
+                        enemies = { { enemyType = "enemy_1" , count = 10 }, { enemyType = "enemy_2" , count = 10 }, { enemyType = "enemy_3" , count = 10 } } , 
                         drops = {
                           { 
                               dropType = "hp_small",
@@ -169,7 +185,7 @@ LevelModel.enemies = {
                   assetName = "enemy_1",
                   speed = 250,
                   health = 10,
-                  impactDamage = 10,
+                  impactDamage = 20,
                   pointsValue = 1
               },
     enemy_2 = {
@@ -186,8 +202,8 @@ LevelModel.enemies = {
                   movementType = "sin",
                   assetName = "enemy_2",
                   speed = 250,
-                  health = 20,
-                  impactDamage = 10,
+                  health = 15,
+                  impactDamage = 30,
                   pointsValue = 2
               }
 }

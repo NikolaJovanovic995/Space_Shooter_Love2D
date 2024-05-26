@@ -10,9 +10,12 @@ local ShipShootTripleAngleCls = require("Scripts/Classes/ShipShoot/ShipShootTrip
 local ShipShootingManager = {}
 local shootingTypes = {}
 
+local activeShooting = nil
+
 ShipShootingManager.init = function()
   
     ShootingModel.init()
+    activeShooting = nil
     BulletObjectPool = ObjectPoolCls.new(
       {
           objectClass = BulletCls,
@@ -26,14 +29,15 @@ ShipShootingManager.init = function()
 end
 
 ShipShootingManager.getShooting = function(shootType) 
-  
-    local shooting = shootingTypes[shootType]
     
+    local shooting = shootingTypes[shootType]
     if shooting == nil then
         error("Can not resolve ship shoot type: " .. shootType)
     end
     
     shooting.bulletObjectPool = BulletObjectPool
+    shooting.spawnedBullets = activeShooting and activeShooting.spawnedBullets or {}
+    activeShooting = shooting
     return shooting
 end
 

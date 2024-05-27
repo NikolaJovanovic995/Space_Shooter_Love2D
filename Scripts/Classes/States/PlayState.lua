@@ -68,7 +68,7 @@ function PlayState:render()
     
     love.graphics.printf("HP: " .. ship.health , 20, 20, ScreenSize.screenWidth, "left")
     love.graphics.printf("SCORE: " .. ship.score , 0, 20, ScreenSize.screenWidth, "center")
-    --love.graphics.print("FPS: " .. love.timer.getFPS() , 360, 60)
+    love.graphics.printf("FPS: " .. love.timer.getFPS(), -20, 50, ScreenSize.screenWidth, "right")
 end
 
 

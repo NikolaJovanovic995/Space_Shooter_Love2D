@@ -16,26 +16,16 @@ end
 
 function Stars:update(dt)
     local dist = self.speed * dt
-    local star = nil
-    local newY = 0
     for i=1, #self.starsArr do
-        star = self.starsArr[i]
-        newY = star.y + dist
-        if newY > ScreenSize.screenHeight then
-          newY = 0
-          star.x = math.random() * ScreenSize.screenWidth
-        end
-        star.y = newY
+        self.starsArr[i].y = self.starsArr[i].y + dist > ScreenSize.screenHeight and 0 or self.starsArr[i].y + dist
     end
 end
 
 function Stars:draw()
   
     love.graphics.setColor(1, 1, 1)
-    local star = nil
     for i=1, #self.starsArr do
-        star = self.starsArr[i]
-        love.graphics.circle("fill", star.x, star.y, self.radius) -- Draw white circle with 100 segments.
+        love.graphics.circle("fill", self.starsArr[i].x, self.starsArr[i].y, self.radius) -- Draw white circle with 100 segments.
     end
 end
 
